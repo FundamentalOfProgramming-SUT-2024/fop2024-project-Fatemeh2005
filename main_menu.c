@@ -4,7 +4,7 @@
 #include "log_in.c"
 
 
-#define MENU_OPTIONS 2
+#define MENU_OPTIONS 3
 
 int show_menu() {
      cbreak();
@@ -14,7 +14,7 @@ int show_menu() {
     box(menu_win, 0, 0);
     keypad(menu_win, TRUE);
 
-    char *choices[MENU_OPTIONS] = {"Register", "Log In"};
+    char *choices[MENU_OPTIONS] = {"Register", "Log In", "Enter as guest"};
     int choice = 0;
     int ch;
    

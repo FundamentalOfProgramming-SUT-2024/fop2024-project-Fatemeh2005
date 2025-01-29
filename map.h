@@ -17,20 +17,29 @@ typedef struct room {
 } room;
 
 typedef struct player {
+    int Maxhealth;
     int color;
     position position;
     int health;
-    int count_move;
+    int count_move1;//rythm for addition to health
+    int count_move2;//rythm for decrease of unhungry
+    int count_move3;//rhytm of decrese of health due tp not eating
     int count_food;
-    int hungry;
+    int unhungry;
     int money;
     int Mweapon, Dweapon, Wweapon, Nweapon, Sweapon;
     int health_potion, speed_potion, damage_potion;
+    int consumed_health_potion;
     //int score
 } player;
-
+typedef struct monster {
+    position position;
+    char name;
+    int health;
+    int power;
+}monster;
 int mark_visited_room(room* room);
-int print_visited(room** rooms);
+int print_visited(player* user,room** rooms);
 room** mapsetup();                    
 room* createroom(int i, int y, int x, int height, int width);  
 int drawroom(int k,room* room);              
@@ -56,4 +65,6 @@ int setting_menu();
 int color_choose_menu();
 int level_choose_menu();
 void pregame(player* user);
+int moveMonsters(player* user, monster** monsters);
+int pathfindingseek(monster* monsters, player* user);
 #endif

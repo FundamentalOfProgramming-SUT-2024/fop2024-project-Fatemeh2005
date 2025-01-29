@@ -82,13 +82,14 @@ int setting(player *user) {
 
         if (selection == 0) {  // Difficulty level
             int level = level_choose_menu();
-            user->health = 25 - (level * 5);
+            user->health = 30 - (level * 5);
+            user->Maxhealth = 30 - (level * 5);
             mvprintw(0, 0, "Difficulty level selected: %d", level + 1);  // Display level (1-based index)
             refresh();
             getch();  // Wait for user to acknowledge
         } else if (selection == 1) {  // Player color
             int color_selection = color_choose_menu();
-            user->color = color_selection + 1;  
+            user->color = color_selection + 2;  
             mvprintw(0, 0, "Color set to %d", user->color);
             refresh();
             getch();  

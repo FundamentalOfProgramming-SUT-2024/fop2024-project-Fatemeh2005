@@ -12,8 +12,11 @@ char** map;
 int level;
  room** rooms;
 int ** visited;
+monster** monsters;
 int main() {
     player* user = malloc(sizeof(player));
+    user ->health = 30;
+    user->Maxhealth = 30;
     
     level = 1;
     initscr();
@@ -45,6 +48,12 @@ int main() {
                 break;
             }
         }
+        else if(selection == 2){
+            pregame(user);
+        getch();
+        clear();
+        break;
+        }
     }
     noecho();
 
@@ -63,9 +72,13 @@ int main() {
         for (int j = 0; j < terminal_width; j++) { 
             visited[i][j] = 0;}
     }
+    monsters = malloc(10* sizeof(monster*));
+    for(int i = 0;i<10; i++){
+        monsters[i] = malloc(sizeof(monster));
+    }
      rooms = mapsetup();
      mark_visited_room( rooms[0]);
-     print_visited( rooms);
+     print_visited(user, rooms);
      message_box();
     
      playersetup(user,rooms);
@@ -75,26 +88,27 @@ int main() {
         
         if(ch == 'E'){
             food_menu(user);
-            print_visited( rooms); 
+            print_visited( user, rooms); 
             attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));            
         }
         if(ch == 'i'){
             weopon_menu(user);
-            print_visited( rooms); 
+            print_visited(user, rooms); 
             attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));
         }
         if(ch == 'p'){
             potion_menu(user);
-            print_visited( rooms); 
+            print_visited(user, rooms); 
             attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));
         }
         handleinput(ch, user);
+        
     }
     for (int i = 0; i < terminal_height; i++) {
         free(map[i]);
@@ -109,7 +123,7 @@ void playersetup(player* user,room** rooms) {
     user->position.x = rooms[0]->position.x + 1;
     user->position.y = rooms[0]->position.y + 1;
     user ->count_food = 0;
-    user ->hungry = 10;
+    user ->unhungry = 10;
     user -> money = 0;
     user ->Mweapon = 1;
     user -> Dweapon = 0;
@@ -119,7 +133,9 @@ void playersetup(player* user,room** rooms) {
     user ->health_potion = 0;
     user ->speed_potion = 0;
     user ->damage_potion = 0;
-    user->count_move = 0;
+    user->count_move1 = 0;
+    user->count_move2 = 0;
+    user->consumed_health_potion = 0;
     attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));

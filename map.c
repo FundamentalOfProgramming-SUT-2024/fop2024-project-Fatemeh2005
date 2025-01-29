@@ -7,6 +7,7 @@
 extern char** map;
 extern int level;
 extern int ** visited;
+extern monster** monsters;
 
 room** mapsetup() {
 
@@ -170,12 +171,63 @@ int random_potion = rand() % 3;
         map [room->position.y + random_number ][room->position.x + random_number ] = 'd';
         break;}
     }
-    if(k % 3 == 1){
-       if(random_potion==0) map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
-       if(random_potion==1) map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
-       if(random_potion==2) map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';  
+    if(k==1){
+        if(random_weapon==0){
+            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
+            monsters [0]->name = 'D';   monsters[0]->health = 5;
+        }
+        else if(random_weapon==1 ){
+                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+                monsters [0]->name = 'S';   monsters [0]->health= 20;
+        }
+        else if(random_weapon == 4){
+            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+                monsters [0]->name = 'G';    monsters [0]->health= 15;
+        }
+        else if(random_weapon==2) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';
+       monsters [0]->name = 'U';    monsters [0]->health= 30;}
+        else if (random_weapon==3) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'F';
+       monsters [0]->name = 'F';    monsters[0]->health = 10;}
+       monsters[0]->position.x=room->position.x + room->width-2;monsters[0]->position.y=room->position.y + room->height-2;
     }
-
+    if(k==5){
+        if(random_weapon==0){
+            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
+            monsters [1]->name = 'D';   monsters[1]->health = 5;
+        }
+        else if(random_weapon==1 ){
+                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+                monsters [1]->name = 'S';   monsters [1]->health= 20;
+        }
+        else if(random_weapon==4){
+                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'G';
+                monsters [1]->name = 'G';   monsters [1]->health= 15;
+        }
+        else if(random_weapon==2) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';
+       monsters [1]->name = 'U';    monsters [1]->health= 30;}
+        else if (random_weapon==3) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'F';
+       monsters [1]->name = 'F';    monsters[1]->health = 10;}
+       monsters[1]->position.x=room->position.x + room->width-2;monsters[1]->position.y=room->position.y + room->height-2;
+    }
+    if(k==7){
+        if(random_weapon==0){
+            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
+            monsters [2]->name = 'D';   monsters[2]->health = 5;
+        }
+        else if(random_weapon==1 ){
+                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+                monsters [2]->name = 'S';   monsters [2]->health= 20;
+        }
+        else if(random_weapon==4){
+                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'G';
+                monsters [2]->name = 'G';   monsters [2]->health= 15;
+        }
+        else if(random_weapon==2) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';
+       monsters [2]->name = 'U';    monsters [2]->health= 30;}
+        else if (random_weapon==3) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'F';
+       monsters [2]->name = 'F';    monsters[2]->health = 10;}
+    monsters [2]->position.x=room->position.x + room->width-2;monsters [2]->position.y=room->position.y + room->height-2;
+    }
     refresh();
     return 1;
 }
@@ -243,7 +295,7 @@ void connect_rooms_top(room* room1, room* room2) {
         map[end_y][start_x - 1] = '#';
     }  
 }
-int print_visited(room** rooms) {
+int print_visited(player*user,room** rooms) {
     
     setlocale(LC_ALL, "");
     int terminal_height, terminal_width;
@@ -306,6 +358,7 @@ i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.
             }
         }
     }
+    
     refresh();
     return 1;
 }
