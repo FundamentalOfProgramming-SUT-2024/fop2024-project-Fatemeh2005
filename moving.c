@@ -295,15 +295,15 @@ int playermove(int y, int x, player* user) {
     user->count_move2++;
     user->count_move3++;
       
-    if(user->unhungry <= 0 && user->count_move3 >= 10){
+    if(user->unhungry <= 0 && user->count_move3 >= 15){
             user->health -- ;
             user->count_move3 = 0;
     }
-    if(user -> unhungry>=10 && user->count_move1>=8 && user->health < user->Maxhealth){
+    if(user -> unhungry>=9 && user->count_move1>=8 && user->health < user->Maxhealth){
         user->health ++;
         user->count_move1 = 0;
     }
-    if(user->count_move2 > 10 && user->unhungry > 0){
+    if(user->count_move2 > 20 && user->unhungry > 0){
         user->unhungry --;
         
         user ->count_move2 = 0;
@@ -428,6 +428,7 @@ int pathfindingseek(monster* monster, player* user) {
     int dy = abs(monster->position.y - user->position.y);
     if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
+        update_message_box("The monster hit you");
         return 0;
     }
 
@@ -452,6 +453,7 @@ int pathfindingseek(monster* monster, player* user) {
      dy = abs(monster->position.y - user->position.y);
      if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
+        update_message_box("The monster hit you");
         
     }
     return 1; 
@@ -462,6 +464,7 @@ int dx = abs(monster->position.x - user->position.x);
     int dy = abs(monster->position.y - user->position.y);
     if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
+        update_message_box("The monster hit you");
         return 0;
     }
 
@@ -490,7 +493,8 @@ int dx = abs(monster->position.x - user->position.x);
      dx = abs(monster->position.x - user->position.x);
      dy = abs(monster->position.y - user->position.y);
      if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
-        user->health -= monster->power;        
+        user->health -= monster->power;
+        update_message_box("The monster hit you");        
     }
     return 1;   
 }
@@ -502,50 +506,118 @@ int checkinroom(player*user, room*room){
     return 0;
 }
 void hit_enemy(player* user, monster** monsters){
-    if(user->default_weapon != weapons[1] && user->default_weapon != weapons[2])    user->default_weapon->count--;
-    //for all three monsters check the four directions
-    for(int i = 0; i<3; i++){
-        for(int j =1; j <= user->default_weapon->range; j++){
-            if( monsters[i]->position.x == user->position.x &&monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
-                    monsters[i]->health -= user->default_weapon->damage;
-                    
-                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
-                    else if(monsters[i]->health <= 0){
-                        update_message_box("You killed the enemy!");
-                        
-                        user->score += (monsters[i]->power*2);}
+    //////////////////////////////Sword and Mace
+    if(user->default_weapon == weapons[1] || user->default_weapon == weapons[2]){
+        for(int i = 0; i<3; i++){
+            if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+1 && monsters[i]->health>0){
+                monsters[i]->health -= user->default_weapon->damage;
+                
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                else if(monsters[i]->health <= 0){
+                    update_message_box("You killed the enemy!");
+                    user->score += (monsters[i]->power*2);
+                }
             }
-        }
-        for(int j =1; j <= user->default_weapon->range; j++){
-            if( monsters[i]->position.x == user->position.x &&monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
-                    monsters[i]->health -= user->default_weapon->damage;
-                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
-                    else if(monsters[i]->health <= 0){
-                        update_message_box("You killed the enemy!");
-                        user->score += (monsters[i]->power*2);}
+            else if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-1 && monsters[i]->health>0){
+                monsters[i]->health -= user->default_weapon->damage;
+                
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                else if(monsters[i]->health <= 0){
+                    update_message_box("You killed the enemy!");
+                    user->score += (monsters[i]->power*2);
+                }
             }
+            else if( monsters[i]->position.x == user->position.x+1 && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
+                monsters[i]->health -= user->default_weapon->damage;
+                
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                else if(monsters[i]->health <= 0){
+                    update_message_box("You killed the enemy!");
+                    user->score += (monsters[i]->power*2);
+                }
             }
-        
-        for(int j =1; j <= user->default_weapon->range; j++){
-            if( monsters[i]->position.x == user->position.x+j &&monsters[i]->position.y == user->position.y && monsters[i]->health>0){
-                    monsters[i]->health -= user->default_weapon->damage;
-                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
-                    else if(monsters[i]->health <= 0){
-                        update_message_box("You killed the enemy!");
-                        user->score += (monsters[i]->power*2);}
-            
-            }
-        }
-        for(int j =1; j <= user->default_weapon->range; j++){
-            if( monsters[i]->position.x == user->position.x-j &&monsters[i]->position.y == user->position.y && monsters[i]->health>0){
-                    monsters[i]->health -= user->default_weapon->damage;
-                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
-                    else if(monsters[i]->health <= 0){
-                        update_message_box("You killed the enemy!");
-                        user->score += (monsters[i]->power*2);}
-            
+            else if( monsters[i]->position.x == user->position.x-1 && monsters[i]->position.y == user->position.y+1 && monsters[i]->health>0){
+                monsters[i]->health -= user->default_weapon->damage;
+                
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                else if(monsters[i]->health <= 0){
+                    update_message_box("You killed the enemy!");
+                    user->score += (monsters[i]->power*2);
                 }
             }
         }
-        beneath_box(user);
     }
+    ///////////////////////////////////other weapons that are long range
+    else{
+        keypad(stdscr, TRUE);
+        int dir;
+        dir = getch();
+        switch(dir){
+            case KEY_UP:
+                for(int i= 0; i<3; i++){
+                    for(int j =1; j <= user->default_weapon->range; j++){
+                        if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
+                            monsters[i]->health -= user->default_weapon->damage;
+                            user->default_weapon->count--;
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            else if(monsters[i]->health <= 0){
+                                update_message_box("You killed the enemy!");
+                                user->score += (monsters[i]->power*2);
+                            }
+                            return;
+                        }
+                    }
+                }
+                
+                break;
+            case KEY_DOWN:
+                for(int i= 0; i<3; i++){
+                    for(int j =1; j <= user->default_weapon->range; j++){
+                        if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
+                            monsters[i]->health -= user->default_weapon->damage;
+                            user->default_weapon->count--;
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            else if(monsters[i]->health <= 0){
+                                update_message_box("You killed the enemy!");
+                                user->score += (monsters[i]->power*2);
+                            }
+                        }
+                    }
+                }
+                break;
+            case KEY_RIGHT:
+                for(int i= 0; i<3; i++){
+                    for(int j =1; j <= user->default_weapon->range; j++){
+                        if( monsters[i]->position.x == user->position.x+j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
+                            monsters[i]->health -= user->default_weapon->damage;
+                            user->default_weapon->count--;
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            else if(monsters[i]->health <= 0){
+                                update_message_box("You killed the enemy!");
+                                user->score += (monsters[i]->power*2);
+                            }
+                        }
+                    }
+                }
+                break;
+            case KEY_LEFT:
+                for(int i= 0; i<3; i++){
+                    for(int j =1; j <= user->default_weapon->range; j++){
+                        if( monsters[i]->position.x == user->position.x-j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
+                            monsters[i]->health -= user->default_weapon->damage;
+                            user->default_weapon->count--;
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            else if(monsters[i]->health <= 0){
+                                update_message_box("You killed the enemy!");
+                                user->score += (monsters[i]->power*2);
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+    }
+    refresh();
+    beneath_box(user);
+}
+

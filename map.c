@@ -427,6 +427,21 @@ void toggle_map_reveal(room** rooms) {
                    const wchar_t symbol[] = L"\U0001F6E2"; 
                 mvaddnwstr(i, j, symbol, -1);
                 }
+                /////////dagger partab shode
+                else if(map [i][j] == 'a'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
+                ///////////normal arrow partab shode
+                else if(map [i][j] == 't'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
+                ///////////////magic wand partab shode
+                else if(map [i][j] == 'c'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
                 else {
 if (level == 4 && i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
 i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.x) {

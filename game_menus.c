@@ -8,7 +8,7 @@ void food_menu(player* user){
     clear();
     
             mvprintw(0, 0,"number of your food units is :  %d", user ->count_food);
-            
+            mvprintw(3, 0,"%d", user->unhungry);
             mvprintw(10, 10, "press c to consume food");
             mvprintw(11, 10, "press Q twice to exit this menu");
             mvprintw(1, 0, "how hungry you are: ");
