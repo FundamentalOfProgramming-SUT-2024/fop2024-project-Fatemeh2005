@@ -32,6 +32,7 @@ typedef struct player {
     int count_move2;//rythm for decrease of unhungry
     int count_move3;//rhytm of decrese of health due tp not eating
     int count_food;
+    int count_perfect_food;
     int unhungry;
     int money;
     weapon* default_weapon;

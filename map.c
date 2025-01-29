@@ -367,11 +367,13 @@ int print_visited(player*user,room** rooms) {
                 }
                 else if(i >= rooms[6]->position.y && j >= rooms[6]->position.x&&
                         i < rooms[6]->height+rooms[6]->position.y&&j<rooms[6]->width+rooms[6]->position.x) {
+                            if(map [i][j] == 'f')    mvprintw(i, j, "%c", map[i][j]);
+                    else{
                 attron(COLOR_PAIR(4));
                 mvprintw(i, j, "%c", map[i][j]);
                 attroff(COLOR_PAIR(4));
+                    }
     }
-                
                 else {
 if (level == 4 && i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
 i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.x) {
@@ -380,8 +382,16 @@ i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.
     attroff(COLOR_PAIR(1));
     
 }
+else if(map [i][j] == 'f' && ((i >= rooms[3]->position.y && j >= rooms[3]->position.x&&
+i < rooms[3]->height+rooms[3]->position.y&&j<rooms[3]->width+rooms[3]->position.x) || (i >= rooms[7]->position.y && j >= rooms[7]->position.x&&
+i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.x))){
+    attron(COLOR_PAIR(5));
+    mvprintw(i, j, "%c", map[i][j]);
+    attroff(COLOR_PAIR(5));
+}
            else     mvprintw(i, j, "%c", map[i][j]);
                 }
+            
             }
         }
     }
@@ -404,6 +414,7 @@ int mark_visited_room(room* room) {
     return 1;    
 }
 void toggle_map_reveal(player* user,room** rooms) {
+    
     static int map_revealed = 0; // Tracks whether the map is currently revealed
     int terminal_height, terminal_width;
     getmaxyx(stdscr, terminal_height, terminal_width);
@@ -411,6 +422,7 @@ void toggle_map_reveal(player* user,room** rooms) {
         for (int i = 0; i < terminal_height; i++) {
         for (int j = 0; j < terminal_width; j++) { 
             if(visited[i][j] == 0){
+                
                 if (map[i][j] == '$') {
                     attron(COLOR_PAIR(1));
                     mvprintw(i, j, "$");
@@ -469,9 +481,12 @@ void toggle_map_reveal(player* user,room** rooms) {
                 }
                 else if(i >= rooms[6]->position.y && j >= rooms[6]->position.x&&
                         i < rooms[6]->height+rooms[6]->position.y&&j<rooms[6]->width+rooms[6]->position.x) {
+                            if(map [i][j] == 'f')    mvprintw(i, j, "%c", map[i][j]);
+                    else{
                 attron(COLOR_PAIR(4));
                 mvprintw(i, j, "%c", map[i][j]);
                 attroff(COLOR_PAIR(4));
+                    }
     }
                 else {
 if (level == 4 && i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
@@ -481,12 +496,23 @@ i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.
     attroff(COLOR_PAIR(1));
     
 }
+else if(map [i][j] == 'f' && ((i >= rooms[3]->position.y && j >= rooms[3]->position.x&&
+i < rooms[3]->height+rooms[3]->position.y&&j<rooms[3]->width+rooms[3]->position.x) || (i >= rooms[7]->position.y && j >= rooms[7]->position.x&&
+i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.x))){
+    attron(COLOR_PAIR(5));
+    mvprintw(i, j, "%c", map[i][j]);
+    attroff(COLOR_PAIR(5));
+}
            else     mvprintw(i, j, "%c", map[i][j]);
                 }
 
             }    
         }
     }
+    for(int k = 0; k<3; k++){
+        if(monsters[k]->health > 0)
+         mvprintw(monsters[k]->position.y, monsters[k]->position.x, "%c", monsters[k]->name);
+        }
 }        
     else{
         for (int i = 3; i < terminal_height; i++) {

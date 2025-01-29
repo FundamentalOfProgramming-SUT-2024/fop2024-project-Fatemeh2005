@@ -9,11 +9,13 @@ void food_menu(player* user){
     keypad(stdscr, TRUE);
     clear();
     
-            mvprintw(0, 0,"number of your food units is :  %d", user ->count_food);
+            mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
+            mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
             mvprintw(3, 0,"%d", user->unhungry);
-            mvprintw(10, 10, "press c to consume food");
-            mvprintw(11, 10, "press Q twice to exit this menu");
-            mvprintw(1, 0, "how hungry you are: ");
+            mvprintw(10, 10, "press c to consume normal food");
+            mvprintw(11, 10, "press p to consume power food");
+            mvprintw(12, 10, "press Q twice to exit this menu");
+            mvprintw(2, 0, "how hungry you are: ");
             for(int i = 0; i<user ->unhungry; i++)
             printw(" ! ");
             char c;
@@ -25,14 +27,31 @@ void food_menu(player* user){
                user ->health += 4;  if(user ->health > user ->Maxhealth)    user->health = user->Maxhealth;
                user ->unhungry += 2;
                clear();
-               mvprintw(0, 0,"number of your food units is :  %d", user ->count_food);
-               mvprintw(10, 10, "press c to consume food");
-               mvprintw(11, 10, "press Q to exit this menu");
-               mvprintw(1, 0, "how hungry you are: ");
-            for(int i = 0; i<10 - user ->unhungry; i++){
-            printw(" ! ");
-            }    
-    }            
+               mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
+            mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
+            mvprintw(3, 0,"%d", user->unhungry);
+            mvprintw(10, 10, "press c to consume normal food");
+            mvprintw(11, 10, "press p to consume power food");
+            mvprintw(12, 10, "press Q twice to exit this menu");
+            mvprintw(2, 0, "how hungry you are: ");
+            for(int i = 0; i<user ->unhungry; i++)
+            printw(" ! ");       
+    }  
+    else if(c == 'p' && user ->count_perfect_food > 0){
+               user ->count_food --;
+               user ->health += 4;  if(user ->health > user ->Maxhealth)    user->health = user->Maxhealth;
+               user ->unhungry += 2;
+               clear();
+               mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
+            mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
+            mvprintw(3, 0,"%d", user->unhungry);
+            mvprintw(10, 10, "press c to consume normal food");
+            mvprintw(11, 10, "press p to consume power food");
+            mvprintw(12, 10, "press Q twice to exit this menu");
+            mvprintw(2, 0, "how hungry you are: ");
+            for(int i = 0; i<user ->unhungry; i++)
+            printw(" ! ");    
+    }          
             else if(c == 'Q'){
                 clear();
                 break;

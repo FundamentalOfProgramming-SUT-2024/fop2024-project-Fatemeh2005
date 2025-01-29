@@ -33,6 +33,7 @@ int main() {
     init_pair(2, COLOR_WHITE, COLOR_BLACK); 
     init_pair(3, COLOR_RED, COLOR_BLACK);
     init_pair(4, COLOR_GREEN, COLOR_BLACK);
+    init_pair(5, COLOR_BLUE, COLOR_BLACK);
 
     bkgd(COLOR_PAIR(2)); 
     refresh;
@@ -131,6 +132,7 @@ void playersetup(player* user,room** rooms) {
     user->position.x = rooms[0]->position.x + 1;
     user->position.y = rooms[0]->position.y + 1;
     user ->count_food = 0;
+    user ->count_perfect_food = 0;
     user ->unhungry = 10;
     user -> money = 0;
     user ->health_potion = 0;

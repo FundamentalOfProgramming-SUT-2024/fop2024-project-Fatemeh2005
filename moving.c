@@ -152,12 +152,29 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
             map[newy][newx] = '.'; 
   
         }
+        //////////////////////////////////////////different food types
         else if (space == 'f') {
-            //user->health += 4;  
-            if(user ->count_food < 5){
+            //normal  food in rooms 0, 1, 2, 5, 8
+if(checkinroom(user, rooms[0]) == 1 ||checkinroom(user, rooms[1]) == 1 ||checkinroom(user, rooms[2]) == 1 ||checkinroom(user, rooms[5]) == 1 ||checkinroom(user, rooms[8]) == 1 ){
+            if(user ->count_food + user->count_perfect_food<5 ){
             update_message_box("You found some food!"); 
             user ->count_food ++;  
             map[newy][newx] = '.';  }
+        }
+        //power food in rooms 3, 7
+else if(checkinroom(user, rooms[3]) == 1 ||checkinroom(user, rooms[7]) == 1 ){
+        if(user ->count_food + user->count_perfect_food < 5){
+            update_message_box("You found some power food! It can also increase your power temporarily"); 
+            user ->count_perfect_food ++;
+             
+            map[newy][newx] = '.';  }
+        }
+else if(checkinroom(user, rooms[4]) == 1 ||checkinroom(user, rooms[6]) == 1 ){
+        
+            update_message_box("Haha it was rotten food!"); 
+            user ->health -= 2;  
+            map[newy][newx] = '.';  
+        }
         }
         else if(space == 'M'){
             weapons[1]->count ++;
@@ -231,7 +248,11 @@ int playermove(int y, int x, player* user) {
     if((y == rooms[6]->door[3].y && x == rooms[6]->door[3].x) || (y == rooms[6]->door[0].y && x == rooms[6]->door[0].x))
     map[y][x] = '?';
     if(checkinroom(user, rooms[6]) == 1)    user->health --;
-  
+    /////////////////////////////////////////////////trap
+    if(y == rooms[2]->position.y + 3 && x == rooms[2]->position.x + rooms[2]->width-4){
+    map [y][x] = '^';
+    user->health -= 4;
+    update_message_box("you fell into a trap");}
     if(user->consumed_damage_potion==1){
         weapons[0]->damage = 24;      
     weapons[1]->damage = 10;
