@@ -13,10 +13,13 @@ int level;
  room** rooms;
 int ** visited;
 monster** monsters;
+weapon** weapons;
+int count_damage;
 int main() {
     player* user = malloc(sizeof(player));
     user ->health = 30;
     user->Maxhealth = 30;
+    count_damage = 0;
     
     level = 1;
     initscr();
@@ -119,23 +122,32 @@ int main() {
     return 0;
 }
 void playersetup(player* user,room** rooms) {
+    weapons = malloc(10*sizeof(weapon*));
+     for(int i = 0; i<5;i++){
+        weapons[i] = malloc(sizeof(weapon));
+     }
     
     user->position.x = rooms[0]->position.x + 1;
     user->position.y = rooms[0]->position.y + 1;
     user ->count_food = 0;
     user ->unhungry = 10;
     user -> money = 0;
-    user ->Mweapon = 1;
-    user -> Dweapon = 0;
-    user -> Wweapon = 0;
-    user -> Nweapon = 0;
-    user -> Sweapon = 0;
     user ->health_potion = 0;
     user ->speed_potion = 0;
     user ->damage_potion = 0;
     user->count_move1 = 0;
     user->count_move2 = 0;
-    user->consumed_health_potion = 0;
+    user->count_move3 = 0;
+    user->consumed_damage_potion = 0;
+    
+    user->default_weapon = weapons[1];
+    ////////////////////////weapon initilizing
+     
+    weapons[0]->name = 'D';     weapons[0]->count = 0;      weapons[0]->damage = 12;      
+    weapons[1]->name = 'M';     weapons[1]->count = 1;      weapons[1]->damage = 5;
+    weapons[2]->name = 'S';     weapons[2]->count = 0;      weapons[2]->damage = 10;
+    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;
+    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;
     attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));

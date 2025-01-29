@@ -8,6 +8,7 @@ extern char** map;
 extern int level;
 extern int ** visited;
 extern monster** monsters;
+extern weapon** weapons;
 
 room** mapsetup() {
 
@@ -65,6 +66,7 @@ room* createroom(int i,int y, int x, int height, int width) {
     newroom->position.y = y;
     newroom->height = height;
     newroom->width = width;
+    newroom->visited = 0;
 
     newroom->door[0].x = x + rand() % (width - 2) + 1;
     newroom->door[0].y = y;
@@ -173,58 +175,58 @@ int random_potion = rand() % 3;
     }
     if(k==1){
         if(random_weapon==0){
-            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
+           
             monsters [0]->name = 'D';   monsters[0]->health = 5;
         }
         else if(random_weapon==1 ){
-                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+                
                 monsters [0]->name = 'S';   monsters [0]->health= 20;
         }
         else if(random_weapon == 4){
-            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+            
                 monsters [0]->name = 'G';    monsters [0]->health= 15;
         }
-        else if(random_weapon==2) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';
+        else if(random_weapon==2) {
        monsters [0]->name = 'U';    monsters [0]->health= 30;}
-        else if (random_weapon==3) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'F';
+        else if (random_weapon==3) {
        monsters [0]->name = 'F';    monsters[0]->health = 10;}
        monsters[0]->position.x=room->position.x + room->width-2;monsters[0]->position.y=room->position.y + room->height-2;
     }
     if(k==5){
         if(random_weapon==0){
-            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
+            
             monsters [1]->name = 'D';   monsters[1]->health = 5;
         }
         else if(random_weapon==1 ){
-                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+                
                 monsters [1]->name = 'S';   monsters [1]->health= 20;
         }
         else if(random_weapon==4){
-                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'G';
+               
                 monsters [1]->name = 'G';   monsters [1]->health= 15;
         }
-        else if(random_weapon==2) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';
+        else if(random_weapon==2) {
        monsters [1]->name = 'U';    monsters [1]->health= 30;}
-        else if (random_weapon==3) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'F';
+        else if (random_weapon==3) {
        monsters [1]->name = 'F';    monsters[1]->health = 10;}
        monsters[1]->position.x=room->position.x + room->width-2;monsters[1]->position.y=room->position.y + room->height-2;
     }
     if(k==7){
         if(random_weapon==0){
-            map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'D'; 
+          
             monsters [2]->name = 'D';   monsters[2]->health = 5;
         }
         else if(random_weapon==1 ){
-                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'S';
+             
                 monsters [2]->name = 'S';   monsters [2]->health= 20;
         }
         else if(random_weapon==4){
-                map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'G';
+             
                 monsters [2]->name = 'G';   monsters [2]->health= 15;
         }
-        else if(random_weapon==2) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'U';
+        else if(random_weapon==2) {
        monsters [2]->name = 'U';    monsters [2]->health= 30;}
-        else if (random_weapon==3) {map[room->position.y +room->height-2 ][room->position.x + room->width-2 ] = 'F';
+        else if (random_weapon==3) {
        monsters [2]->name = 'F';    monsters[2]->health = 10;}
     monsters [2]->position.x=room->position.x + room->width-2;monsters [2]->position.y=room->position.y + room->height-2;
     }
@@ -370,6 +372,7 @@ int mark_visited_room(room* room) {
             }
            visited[y][x] = 1;
             attroff(COLOR_PAIR(1));
+            room->visited = 1;
         }  
     }           
     refresh();

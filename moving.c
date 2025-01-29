@@ -8,6 +8,8 @@ extern int level;
 extern int ** visited;
 extern room** rooms;
 extern monster** monsters;
+extern weapon** weapons;
+extern int count_damage;
 
 int handleinput(int input, player* user) {
     keypad(stdscr, TRUE);
@@ -150,23 +152,23 @@ int checkposition(int newy, int newx, player* user) {
             map[newy][newx] = '.';  }
         }
         else if(space == 'M'){
-            user ->Mweapon ++;
+            weapons[1]->count ++;
             map [newy] [newx] = '.';
         }
         else if(space == 'g'){
-            user ->Dweapon ++;
+            weapons[0]->count += 10;
             map [newy] [newx] = '.';
         }
         else if(space == 'W'){
-            user ->Wweapon ++;
+            weapons[3]->count += 8;
             map [newy] [newx] = '.';
         }
         else if(space == 'N'){
-            user ->Mweapon ++;
+            weapons[4]->count += 20;
             map [newy] [newx] = '.';
         }
         else if(space == 'w'){
-            user ->Sweapon ++;
+            weapons[2]->count ++;
             map [newy] [newx] = '.';
         }
         else if(space == 'H'){
@@ -201,9 +203,27 @@ int checkposition(int newy, int newx, player* user) {
     beneath_box( user);
     return 1;
 }
+
 int playermove(int y, int x, player* user) {
     printw("%d", user->health);
-
+    if(user->consumed_damage_potion==1){
+        weapons[0]->damage = 24;      
+    weapons[1]->damage = 10;
+    weapons[2]->damage = 20;
+    weapons[3]->damage = 30;
+    weapons[4]->damage = 10;
+    count_damage++;
+    }
+    
+    if(count_damage > 10){
+        user->consumed_damage_potion = 0;
+    weapons[0]->damage = 12;      
+    weapons[1]->damage = 5;
+    weapons[2]->damage = 10;
+    weapons[3]->damage = 15;
+    weapons[4]->damage = 5;
+    count_damage = 0;
+    }
     mvprintw(user->position.y, user->position.x, "%c", map [user->position.y][user->position.x]);
      if(map[y][x] == '='){
             for(int i=rooms[2]->position.x; i<rooms[2]->position.x+rooms[2]->width; i++){
@@ -267,18 +287,18 @@ int playermove(int y, int x, player* user) {
     user->count_move2++;
     user->count_move3++;
       
-    if(user->unhungry <= 0 && user->count_move3 >= 5){
+    if(user->unhungry <= 0 && user->count_move3 >= 10){
             user->health -- ;
             user->count_move3 = 0;
     }
     if(user -> unhungry>=10 && user->count_move1>=8 && user->health < user->Maxhealth){
         user->health ++;
-        user->count_move2 = 0;
+        user->count_move1 = 0;
     }
-    if(user->count_move2 > 10){
+    if(user->count_move2 > 10 && user->unhungry > 0){
         user->unhungry --;
         
-        user ->count_move1 = 0;
+        user ->count_move2 = 0;
     }
     if(user->health<= 0){
             clear();
@@ -307,17 +327,30 @@ int playermove(int y, int x, player* user) {
             attroff(COLOR_PAIR(user ->color));    
                 visited [user->position.y][user->position.x]=1;
     }
-    if (user->position.x > rooms [1]->position.x && user->position.y > rooms [1]->position.y &&
-            user->position.x < rooms [1]->position.x + rooms [1]->width && user->position.y < rooms [1]->position.y + rooms [1]->height)
-pathfindingseek( monsters[0], user);
-if (user->position.x > rooms [5]->position.x && user->position.y > rooms [5]->position.y &&
-            user->position.x < rooms [5]->position.x + rooms [5]->width && user->position.y < rooms [5]->position.y + rooms [5]->height)
-pathfindingseek( monsters[1], user);
-if (user->position.x > rooms [7]->position.x && user->position.y > rooms [7]->position.y &&
-            user->position.x < rooms [7]->position.x + rooms [7]->width && user->position.y < rooms [7]->position.y + rooms [7]->height)
-pathfindingseek( monsters[2], user);
-    refresh();
+    ///////////////////////////////////monster move
+    if(rooms[1]->visited == 1 && (monsters[0]->name=='S'||monsters[0]->name=='U')){
+      pathsirish(monsters[0], user);
+    
+    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
+     if(rooms[5]->visited == 1 && (monsters[1]->name=='S'||monsters[1]->name=='U')){
+      pathsirish(monsters[1], user);
+    
+    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
+     if(rooms[7]->visited == 1 && (monsters[2]->name=='S'||monsters[2]->name=='U')){
+      pathsirish(monsters[2], user);
+    
+    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
+    else if(checkinroom(user, rooms[1])==1&&!(monsters[0]->name=='S'||monsters[0]->name=='U')){    pathfindingseek(monsters[0], user);
+    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
 
+    else if(checkinroom(user, rooms[5])==1&&!(monsters[1]->name=='S'||monsters[1]->name=='U')){    pathfindingseek(monsters[1], user);
+    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
+
+    else if(checkinroom(user, rooms[7])==1&&!(monsters[2]->name=='S'||monsters[2]->name=='U')){    pathfindingseek(monsters[2], user);
+    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
+     
+    refresh();
+    /////////////////////////////////////////////////////next level
     if (map[y][x] == '<') {
         clear();
         bkgd(COLOR_PAIR(2));
@@ -354,36 +387,89 @@ pathfindingseek( monsters[2], user);
         refresh();
         int ch;
         while ((ch = getch()) != 'q') {
+            if(ch == 'E'){
+            food_menu(user);
+            print_visited( user, rooms); 
+            attron(COLOR_PAIR(user ->color));
+    mvprintw(user->position.y, user->position.x, "p");
+    attroff(COLOR_PAIR(user ->color));            
+        }
+        if(ch == 'i'){
+            weopon_menu(user);
+            print_visited(user, rooms); 
+            attron(COLOR_PAIR(user ->color));
+    mvprintw(user->position.y, user->position.x, "p");
+    attroff(COLOR_PAIR(user ->color));
+        }
+        if(ch == 'p'){
+            potion_menu(user);
+            print_visited(user, rooms); 
+            attron(COLOR_PAIR(user ->color));
+    mvprintw(user->position.y, user->position.x, "p");
+    attroff(COLOR_PAIR(user ->color));
+        }
             handleinput(ch, user);
         }
         return 0;
     }
     return 1;
 }
-int pathfindingseek(monster* monster, player* user) {
-    
+int pathfindingseek(monster* monster, player* user) {    
     int dx = abs(monster->position.x - user->position.x);
     int dy = abs(monster->position.y - user->position.y);
 
     if (dx > dy) {
-        if (monster->position.x > user->position.x && map[monster->position.y] [monster->position.x - 1] == '.') {
-            map [monster->position.y][monster->position.x] = '.';
+        if (monster->position.x >= user->position.x && map[monster->position.y] [monster->position.x - 1] == '.') {
+           
             monster->position.x--; 
-        } else if (monster->position.x < user->position.x && map[monster->position.y] [monster->position.x + 1] == '.') {
-            map [monster->position.y][monster->position.x] = '.';
+        } else if (monster->position.x <user->position.x && map[monster->position.y] [monster->position.x + 1] == '.') {
+           
             monster->position.x++; 
         }
     } else { 
-        if (monster->position.y > user->position.y && map[monster->position.y - 1] [monster->position.x] == '.') {
-            map [monster->position.y][monster->position.x] = '.';
+        if (monster->position.y >= user->position.y && map[monster->position.y - 1] [monster->position.x] == '.') {
+            
             monster->position.y--; 
         } else if (monster->position.y < user->position.y && map[monster->position.y + 1] [monster->position.x] == '.') {
-            map [monster->position.y][monster->position.x] = '.';
+            
             monster->position.y++; 
         }
     }
-    map [monster->position.y][monster->position.x] = monster->name;
-
     return 1; 
 }
+int pathsirish(monster* monster, player* user){
+    
+int dx = abs(monster->position.x - user->position.x);
+    int dy = abs(monster->position.y - user->position.y);
 
+    if (dx > dy) {
+        if (monster->position.x >= user->position.x && (map[monster->position.y] [monster->position.x - 1] == '.'||map[monster->position.y] [monster->position.x - 1]=='+'
+        ||map[monster->position.y] [monster->position.x - 1]=='#'||map[monster->position.y] [monster->position.x - 1] == '@')) {
+           
+            monster->position.x--; 
+        } else if (monster->position.x <user->position.x && (map[monster->position.y] [monster->position.x + 1] == '.'||map[monster->position.y] [monster->position.x + 1] == '+'
+        ||map[monster->position.y] [monster->position.x + 1] == '#'||map[monster->position.y] [monster->position.x + 1] == '@')) {
+           
+            monster->position.x++; 
+        }
+    } 
+    else { 
+        if (monster->position.y >= user->position.y && (map[monster->position.y - 1] [monster->position.x] == '.'||map[monster->position.y - 1] [monster->position.x] == '+'
+        ||map[monster->position.y - 1] [monster->position.x] == '#'||map[monster->position.y - 1] [monster->position.x] == '@')) {
+            
+            monster->position.y--; 
+        } else if (monster->position.y < user->position.y && (map[monster->position.y + 1] [monster->position.x] == '.'||map[monster->position.y + 1] [monster->position.x] == '+'
+        ||map[monster->position.y + 1] [monster->position.x] == '#'||map[monster->position.y + 1] [monster->position.x] == '@')) {
+            
+            monster->position.y++; 
+        }
+    } 
+    return 1;   
+}
+int checkinroom(player*user, room*room){
+    for (int y = room->position.y+1; y < room->position.y + room->height; y++) {
+        for (int x = room->position.x+1; x < room->position.x + room->width; x++) {
+            if(user->position.x ==x && user->position.y==y) return 1;}
+    }
+    return 0;
+}
