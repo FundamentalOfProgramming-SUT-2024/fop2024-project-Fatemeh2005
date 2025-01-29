@@ -176,58 +176,58 @@ int random_potion = rand() % 3;
     if(k==1){
         if(random_weapon==0){
            
-            monsters [0]->name = 'D';   monsters[0]->health = 5;
+            monsters [0]->name = 'D';   monsters[0]->health = 5;    monsters[0]->power = 1;
         }
         else if(random_weapon==1 ){
                 
-                monsters [0]->name = 'S';   monsters [0]->health= 20;
+                monsters [0]->name = 'S';   monsters [0]->health= 20;    monsters[0]->power = 3;  
         }
         else if(random_weapon == 4){
             
-                monsters [0]->name = 'G';    monsters [0]->health= 15;
+                monsters [0]->name = 'G';    monsters [0]->health= 15;    monsters[0]->power = 2;
         }
         else if(random_weapon==2) {
-       monsters [0]->name = 'U';    monsters [0]->health= 30;}
+       monsters [0]->name = 'U';    monsters [0]->health= 30;    monsters[0]->power = 4;}
         else if (random_weapon==3) {
-       monsters [0]->name = 'F';    monsters[0]->health = 10;}
+       monsters [0]->name = 'F';    monsters[0]->health = 10;    monsters[0]->power = 2;}
        monsters[0]->position.x=room->position.x + room->width-2;monsters[0]->position.y=room->position.y + room->height-2;
     }
     if(k==5){
         if(random_weapon==0){
             
-            monsters [1]->name = 'D';   monsters[1]->health = 5;
+            monsters [1]->name = 'D';   monsters[1]->health = 5;    monsters[1]->power = 1;
         }
         else if(random_weapon==1 ){
                 
-                monsters [1]->name = 'S';   monsters [1]->health= 20;
+                monsters [1]->name = 'S';   monsters [1]->health= 20;    monsters[1]->power = 3;  
         }
         else if(random_weapon==4){
                
-                monsters [1]->name = 'G';   monsters [1]->health= 15;
+                monsters [1]->name = 'G';   monsters [1]->health= 15;    monsters[1]->power = 2;
         }
         else if(random_weapon==2) {
-       monsters [1]->name = 'U';    monsters [1]->health= 30;}
+       monsters [1]->name = 'U';    monsters [1]->health= 30;    monsters[1]->power = 4;}
         else if (random_weapon==3) {
-       monsters [1]->name = 'F';    monsters[1]->health = 10;}
+       monsters [1]->name = 'F';    monsters[1]->health = 10;    monsters[1]->power = 2;}
        monsters[1]->position.x=room->position.x + room->width-2;monsters[1]->position.y=room->position.y + room->height-2;
     }
     if(k==7){
         if(random_weapon==0){
           
-            monsters [2]->name = 'D';   monsters[2]->health = 5;
+            monsters [2]->name = 'D';   monsters[2]->health = 5;    monsters[2]->power = 1;
         }
         else if(random_weapon==1 ){
              
-                monsters [2]->name = 'S';   monsters [2]->health= 20;
+                monsters [2]->name = 'S';   monsters [2]->health= 20;    monsters[2]->power = 3;
         }
         else if(random_weapon==4){
              
-                monsters [2]->name = 'G';   monsters [2]->health= 15;
+                monsters [2]->name = 'G';   monsters [2]->health= 15;    monsters[2]->power = 2;
         }
         else if(random_weapon==2) {
-       monsters [2]->name = 'U';    monsters [2]->health= 30;}
+       monsters [2]->name = 'U';    monsters [2]->health= 30;    monsters[2]->power = 4;}
         else if (random_weapon==3) {
-       monsters [2]->name = 'F';    monsters[2]->health = 10;}
+       monsters [2]->name = 'F';    monsters[2]->health = 10;    monsters[2]->power = 2;}
     monsters [2]->position.x=room->position.x + room->width-2;monsters [2]->position.y=room->position.y + room->height-2;
     }
     refresh();
@@ -471,4 +471,6 @@ void beneath_box(player * user){
         int terminal_height, terminal_width;
         getmaxyx(stdscr, terminal_height, terminal_width);
         mvprintw(terminal_height- 5, 4, "Money : %d", user -> money);
+        mvprintw(terminal_height- 5, 20, "Health : %d", user ->health);
+        mvprintw(terminal_height- 5, 40, "Score : %d", user ->score);
 }

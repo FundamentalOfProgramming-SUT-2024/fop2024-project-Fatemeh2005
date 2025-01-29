@@ -12,6 +12,7 @@ typedef struct weapon
     int count;
     char name;
     int damage;
+    int range;
 }weapon;
 typedef struct room {
     int visited;
@@ -37,7 +38,7 @@ typedef struct player {
     int health_potion, speed_potion, damage_potion;
     int consumed_damage_potion;
 
-    //int score
+    int score;
 } player;
 typedef struct monster {
     position position;
@@ -54,8 +55,8 @@ int drawroom(int k,room* room);
 void connect_rooms_right(room* room1, room* room2); 
 void connect_rooms_top(room* room1, room* room2);    
 void playersetup(player* user,room** rooms);       
-int handleinput(int input, player* user);
-int checkposition(int newy, int newx, player* user);   
+int handleinput(int input, player* user, monster** monsters);
+int checkposition(int newy, int newx, player* user, monster** monsters);   
 int playermove(int y, int x, player* user);     
 void toggle_map_reveal(room**rooms);    
 void update_message_box(const char* message);
@@ -76,4 +77,5 @@ void pregame(player* user);
 int pathfindingseek(monster* monsters, player* user);
 int pathsirish(monster* monster, player* user);
 int checkinroom(player*user, room*room);
+void hit_enemy(player* user, monster** monsters);
 #endif

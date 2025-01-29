@@ -110,7 +110,8 @@ int main() {
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));
         }
-        handleinput(ch, user);
+        
+        handleinput(ch, user,  monsters);
         
     }
     for (int i = 0; i < terminal_height; i++) {
@@ -139,15 +140,16 @@ void playersetup(player* user,room** rooms) {
     user->count_move2 = 0;
     user->count_move3 = 0;
     user->consumed_damage_potion = 0;
+    user->score = 0;
     
     user->default_weapon = weapons[1];
     ////////////////////////weapon initilizing
      
-    weapons[0]->name = 'D';     weapons[0]->count = 0;      weapons[0]->damage = 12;      
-    weapons[1]->name = 'M';     weapons[1]->count = 1;      weapons[1]->damage = 5;
-    weapons[2]->name = 'S';     weapons[2]->count = 0;      weapons[2]->damage = 10;
-    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;
-    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;
+    weapons[0]->name = 'D';     weapons[0]->count = 0;      weapons[0]->damage = 12;      weapons[0]->range = 5;     
+    weapons[1]->name = 'M';     weapons[1]->count = 1;      weapons[1]->damage = 5;      weapons[1]->range = 1;
+    weapons[2]->name = 'S';     weapons[2]->count = 0;      weapons[2]->damage = 10;      weapons[2]->range = 1;
+    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;      weapons[3]->range = 10;
+    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;      weapons[4]->range = 5;
     attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));

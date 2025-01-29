@@ -11,7 +11,10 @@ extern monster** monsters;
 extern weapon** weapons;
 extern int count_damage;
 
-int handleinput(int input, player* user) {
+int handleinput(int input, player* user, monster** monsters) {
+    if(input==' '){
+        hit_enemy(user, monsters);
+    }
     keypad(stdscr, TRUE);
     static int pressed_g = 0;
     static int fast_move_mode = 0; 
@@ -58,7 +61,7 @@ int handleinput(int input, player* user) {
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
                 }
                 break;
-            case '9':
+            case KEY_PPAGE: case '9':
                 while ( map [newy-1][newx+1] != ' '&&map [newy-1 ][newx+1] != '_'
                 &&map [newy-1 ][newx+1] != '|'&&map [newy-1][newx+1] != 'O') {
                     visited [newy-1][newx+1]=1;
@@ -67,7 +70,7 @@ int handleinput(int input, player* user) {
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
                 }
                 break;
-            case '1':
+            case KEY_END: case '1':
                 while ( map [newy+1][newx-1] != ' '&&map [newy+1 ][newx-1] != '_'
                 &&map [newy+1 ][newx-1] != '|'&&map [newy+1][newx-1] != 'O') {
                     visited [newy+1][newx-1]=1;
@@ -76,7 +79,7 @@ int handleinput(int input, player* user) {
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
                 }
                 break;
-            case '7':
+            case KEY_HOME: case '7':
                 while ( map [newy-1][newx-1] != ' '&&map [newy-1 ][newx-1] != '_'
                 &&map [newy-1 ][newx-1] != '|'&&map[newy-1][newx-1] != 'O') {
                     visited [newy-1][newx-1]=1;
@@ -85,7 +88,7 @@ int handleinput(int input, player* user) {
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
                 }
                 break;
-            case '3':
+            case KEY_NPAGE: case '3':
                 while ( map [newy+1][newx+1] != ' '&&map [newy+1 ][newx+1] != '_'
                 &&map [newy+1][newx+1] != '|'&&map [newy+1][newx+1] != 'O') {
                     visited [newy+1][newx+1]=1;
@@ -97,7 +100,7 @@ int handleinput(int input, player* user) {
             default:
                 return 0; 
         }
-        checkposition(newy, newx, user);
+        checkposition(newy, newx, user, monsters);
         return 1;
     }
 
@@ -130,16 +133,20 @@ int handleinput(int input, player* user) {
     }
     return 1;}
 
-    checkposition(newy, newx, user);
+    checkposition(newy, newx, user, monsters);
     return 1;
 }
-int checkposition(int newy, int newx, player* user) {
+int checkposition(int newy, int newx, player* user, monster** monsters) {
     char space = map[newy][newx];
     
-    if (space != ' ' && space != '_' && space != '|' && space != 'O' ) {
+    if (space != ' ' && space != '_' && space != '|' && space != 'O' 
+    && !(monsters[0]->position.y==newy && monsters[0]->position.x == newx && monsters[0]->health>0)
+    && !(monsters[1]->position.y==newy && monsters[1]->position.x == newx && monsters[1]->health>0)
+    && !(monsters[2]->position.y==newy && monsters[2]->position.x == newx && monsters[2]->health>0)) {
         message_box();
           if (space == '$') {
-            user->money += 4;   
+            user->money += 4;  
+            user->score += 2; 
             update_message_box("You earned 4 pieces of gold!");       
             map[newy][newx] = '.'; 
   
@@ -185,6 +192,7 @@ int checkposition(int newy, int newx, player* user) {
         }
         else if(space == 'n'){
             user ->money +=8;
+            user->score += 4;
             update_message_box("This is black gold! You earned 8 pieces of gold!");
             map [newy] [newx] = '.';
         }
@@ -205,7 +213,7 @@ int checkposition(int newy, int newx, player* user) {
 }
 
 int playermove(int y, int x, player* user) {
-    printw("%d", user->health);
+  
     if(user->consumed_damage_potion==1){
         weapons[0]->damage = 24;      
     weapons[1]->damage = 10;
@@ -327,26 +335,26 @@ int playermove(int y, int x, player* user) {
             attroff(COLOR_PAIR(user ->color));    
                 visited [user->position.y][user->position.x]=1;
     }
-    ///////////////////////////////////monster move
-    if(rooms[1]->visited == 1 && (monsters[0]->name=='S'||monsters[0]->name=='U')){
+    //////////////////////////////////////monster move
+    if(rooms[1]->visited == 1 && (monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){
       pathsirish(monsters[0], user);
     
     mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
-     if(rooms[5]->visited == 1 && (monsters[1]->name=='S'||monsters[1]->name=='U')){
+     if(rooms[5]->visited == 1 && (monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){
       pathsirish(monsters[1], user);
     
     mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
-     if(rooms[7]->visited == 1 && (monsters[2]->name=='S'||monsters[2]->name=='U')){
+     if(rooms[7]->visited == 1 && (monsters[2]->name=='S'||monsters[2]->name=='U') && monsters[2]->health>0){
       pathsirish(monsters[2], user);
     
     mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
-    else if(checkinroom(user, rooms[1])==1&&!(monsters[0]->name=='S'||monsters[0]->name=='U')){    pathfindingseek(monsters[0], user);
+    else if(checkinroom(user, rooms[1])==1&&!(monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){    pathfindingseek(monsters[0], user);
     mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
 
-    else if(checkinroom(user, rooms[5])==1&&!(monsters[1]->name=='S'||monsters[1]->name=='U')){    pathfindingseek(monsters[1], user);
+    else if(checkinroom(user, rooms[5])==1&&!(monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){    pathfindingseek(monsters[1], user);
     mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
 
-    else if(checkinroom(user, rooms[7])==1&&!(monsters[2]->name=='S'||monsters[2]->name=='U')){    pathfindingseek(monsters[2], user);
+    else if(checkinroom(user, rooms[7])==1&&!(monsters[2]->name=='S'||monsters[2]->name=='U')&& monsters[2]->health>0){    pathfindingseek(monsters[2], user);
     mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
      
     refresh();
@@ -408,7 +416,8 @@ int playermove(int y, int x, player* user) {
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));
         }
-            handleinput(ch, user);
+        
+            handleinput(ch, user, monsters);
         }
         return 0;
     }
@@ -417,6 +426,10 @@ int playermove(int y, int x, player* user) {
 int pathfindingseek(monster* monster, player* user) {    
     int dx = abs(monster->position.x - user->position.x);
     int dy = abs(monster->position.y - user->position.y);
+    if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
+        user->health -= monster->power;
+        return 0;
+    }
 
     if (dx > dy) {
         if (monster->position.x >= user->position.x && map[monster->position.y] [monster->position.x - 1] == '.') {
@@ -435,12 +448,22 @@ int pathfindingseek(monster* monster, player* user) {
             monster->position.y++; 
         }
     }
+     dx = abs(monster->position.x - user->position.x);
+     dy = abs(monster->position.y - user->position.y);
+     if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
+        user->health -= monster->power;
+        
+    }
     return 1; 
 }
 int pathsirish(monster* monster, player* user){
     
 int dx = abs(monster->position.x - user->position.x);
     int dy = abs(monster->position.y - user->position.y);
+    if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
+        user->health -= monster->power;
+        return 0;
+    }
 
     if (dx > dy) {
         if (monster->position.x >= user->position.x && (map[monster->position.y] [monster->position.x - 1] == '.'||map[monster->position.y] [monster->position.x - 1]=='+'
@@ -464,6 +487,11 @@ int dx = abs(monster->position.x - user->position.x);
             monster->position.y++; 
         }
     } 
+     dx = abs(monster->position.x - user->position.x);
+     dy = abs(monster->position.y - user->position.y);
+     if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
+        user->health -= monster->power;        
+    }
     return 1;   
 }
 int checkinroom(player*user, room*room){
@@ -473,3 +501,51 @@ int checkinroom(player*user, room*room){
     }
     return 0;
 }
+void hit_enemy(player* user, monster** monsters){
+    if(user->default_weapon != weapons[1] && user->default_weapon != weapons[2])    user->default_weapon->count--;
+    //for all three monsters check the four directions
+    for(int i = 0; i<3; i++){
+        for(int j =1; j <= user->default_weapon->range; j++){
+            if( monsters[i]->position.x == user->position.x &&monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
+                    monsters[i]->health -= user->default_weapon->damage;
+                    
+                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                    else if(monsters[i]->health <= 0){
+                        update_message_box("You killed the enemy!");
+                        
+                        user->score += (monsters[i]->power*2);}
+            }
+        }
+        for(int j =1; j <= user->default_weapon->range; j++){
+            if( monsters[i]->position.x == user->position.x &&monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
+                    monsters[i]->health -= user->default_weapon->damage;
+                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                    else if(monsters[i]->health <= 0){
+                        update_message_box("You killed the enemy!");
+                        user->score += (monsters[i]->power*2);}
+            }
+            }
+        
+        for(int j =1; j <= user->default_weapon->range; j++){
+            if( monsters[i]->position.x == user->position.x+j &&monsters[i]->position.y == user->position.y && monsters[i]->health>0){
+                    monsters[i]->health -= user->default_weapon->damage;
+                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                    else if(monsters[i]->health <= 0){
+                        update_message_box("You killed the enemy!");
+                        user->score += (monsters[i]->power*2);}
+            
+            }
+        }
+        for(int j =1; j <= user->default_weapon->range; j++){
+            if( monsters[i]->position.x == user->position.x-j &&monsters[i]->position.y == user->position.y && monsters[i]->health>0){
+                    monsters[i]->health -= user->default_weapon->damage;
+                    if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                    else if(monsters[i]->health <= 0){
+                        update_message_box("You killed the enemy!");
+                        user->score += (monsters[i]->power*2);}
+            
+                }
+            }
+        }
+        beneath_box(user);
+    }
