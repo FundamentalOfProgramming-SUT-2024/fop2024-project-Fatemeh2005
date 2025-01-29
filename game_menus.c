@@ -3,6 +3,8 @@
 #include <time.h>
 #include "map.h"
 
+extern weapon** weapons;
+
 void food_menu(player* user){
     keypad(stdscr, TRUE);
     clear();

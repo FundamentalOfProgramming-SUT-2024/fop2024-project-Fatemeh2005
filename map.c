@@ -42,6 +42,7 @@ room** mapsetup() {
     connect_rooms_right(rooms[1], rooms[2]);
     connect_rooms_right(rooms[3], rooms[4]);
     connect_rooms_right(rooms[4], rooms[5]);
+    connect_rooms_right(rooms[6], rooms[7]);
     connect_rooms_top(rooms[0], rooms[3]);
     connect_rooms_top(rooms[3], rooms[6]);
     connect_rooms_top(rooms[4], rooms[7]);
@@ -124,6 +125,9 @@ int drawroom(int k, room* room) {
     if(k == 1){
         map[room->door[3].y-1][room->door[3].x] = '=';
     }
+    ////////////////////////////////////did this for hidden door
+    if(k == 6)      {map[room->door[3].y][room->door[3].x] = '|';   map[room->door[0].y][room->door[0].x] = '_';}
+    if(k == 7)      map[room->door[2].y][room->door[2].x] = '+';
     int random_number = 2 + rand() % 3;
     int random_weapon = rand() % 5;
     map[room->position.y + random_number][room->position.x + random_number] = 'O';
@@ -361,6 +365,12 @@ int print_visited(player*user,room** rooms) {
                   const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
+                else if(i >= rooms[6]->position.y && j >= rooms[6]->position.x&&
+                        i < rooms[6]->height+rooms[6]->position.y&&j<rooms[6]->width+rooms[6]->position.x) {
+                attron(COLOR_PAIR(4));
+                mvprintw(i, j, "%c", map[i][j]);
+                attroff(COLOR_PAIR(4));
+    }
                 
                 else {
 if (level == 4 && i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
@@ -393,7 +403,7 @@ int mark_visited_room(room* room) {
     refresh();
     return 1;    
 }
-void toggle_map_reveal(room** rooms) {
+void toggle_map_reveal(player* user,room** rooms) {
     static int map_revealed = 0; // Tracks whether the map is currently revealed
     int terminal_height, terminal_width;
     getmaxyx(stdscr, terminal_height, terminal_width);
@@ -457,6 +467,12 @@ void toggle_map_reveal(room** rooms) {
                   const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
+                else if(i >= rooms[6]->position.y && j >= rooms[6]->position.x&&
+                        i < rooms[6]->height+rooms[6]->position.y&&j<rooms[6]->width+rooms[6]->position.x) {
+                attron(COLOR_PAIR(4));
+                mvprintw(i, j, "%c", map[i][j]);
+                attroff(COLOR_PAIR(4));
+    }
                 else {
 if (level == 4 && i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
 i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.x) {

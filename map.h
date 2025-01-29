@@ -58,7 +58,7 @@ void playersetup(player* user,room** rooms);
 int handleinput(int input, player* user, monster** monsters);
 int checkposition(int newy, int newx, player* user, monster** monsters);   
 int playermove(int y, int x, player* user);     
-void toggle_map_reveal(room**rooms);    
+void toggle_map_reveal(player* user,room**rooms);    
 void update_message_box(const char* message);
 void message_box();
 int show_menu();

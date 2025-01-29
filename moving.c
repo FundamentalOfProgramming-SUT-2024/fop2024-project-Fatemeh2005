@@ -19,7 +19,7 @@ int handleinput(int input, player* user, monster** monsters) {
     static int pressed_g = 0;
     static int fast_move_mode = 0; 
     if (input == 'M' ) {
-        toggle_map_reveal(rooms);
+        toggle_map_reveal(user, rooms);
         beneath_box( user);
         return 1;
     }
@@ -139,10 +139,11 @@ int handleinput(int input, player* user, monster** monsters) {
 int checkposition(int newy, int newx, player* user, monster** monsters) {
     char space = map[newy][newx];
     
-    if (space != ' ' && space != '_' && space != '|' && space != 'O' 
+    if ((space != ' ' && space != '_' && space != '|' && space != 'O' 
     && !(monsters[0]->position.y==newy && monsters[0]->position.x == newx && monsters[0]->health>0)
     && !(monsters[1]->position.y==newy && monsters[1]->position.x == newx && monsters[1]->health>0)
-    && !(monsters[2]->position.y==newy && monsters[2]->position.x == newx && monsters[2]->health>0)) {
+    && !(monsters[2]->position.y==newy && monsters[2]->position.x == newx && monsters[2]->health>0))||
+    (newy == rooms[6]->door[3].y && newx == rooms[6]->door[3].x) || (newy == rooms[6]->door[0].y && newx == rooms[6]->door[0].x)) {
         message_box();
           if (space == '$') {
             user->money += 4;  
@@ -227,6 +228,9 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
 }
 
 int playermove(int y, int x, player* user) {
+    if((y == rooms[6]->door[3].y && x == rooms[6]->door[3].x) || (y == rooms[6]->door[0].y && x == rooms[6]->door[0].x))
+    map[y][x] = '?';
+    if(checkinroom(user, rooms[6]) == 1)    user->health --;
   
     if(user->consumed_damage_potion==1){
         weapons[0]->damage = 24;      
