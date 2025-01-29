@@ -150,10 +150,10 @@ int drawroom(int k, room* room) {
         map [room->position.y + random_number + 1][room->position.x + random_number + 1] = 'g';
         break;
         case 2:
-        map [room->position.y + random_number + 1][room->position.x + random_number + 1] = 'W';
+        map [room->position.y + random_number + 1][room->position.x + random_number + 1] = 'c';
         break;
         case 3:
-        map [room->position.y + random_number + 1][room->position.x + random_number + 1] = 'N';
+        map [room->position.y + random_number + 1][room->position.x + random_number + 1] = 't';
         break;
         case 4:
         map [room->position.y + random_number + 1][room->position.x + random_number + 1] = 'w';
@@ -318,11 +318,11 @@ int print_visited(player*user,room** rooms) {
                      const wchar_t symbol[] = L"\U0001F5E1"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
-                else if(map[i][j] == 'W'){
+                else if(map[i][j] == 'c'){
                      const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
-                else if(map[i][j] == 'N'){
+                else if(map[i][j] == 't'){
                      const wchar_t symbol[] = L"\U000027B3"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
@@ -345,6 +345,21 @@ int print_visited(player*user,room** rooms) {
                 else if(map [i][j] == 'n'){
                    const wchar_t symbol[] = L"\U0001F6E2"; 
                 mvaddnwstr(i, j, symbol, -1);
+                }
+                /////////dagger partab shode
+                else if(map [i][j] == 'D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
+                ///////////normal arrow partab shode
+                else if(map [i][j] == 'N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
+                ///////////////magic wand partab shode
+                else if(map [i][j] == 'W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(i, j, symbol, -1);
                 }
                 
                 else {
@@ -399,11 +414,11 @@ void toggle_map_reveal(room** rooms) {
                      const wchar_t symbol[] = L"\U0001F5E1"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
-                else if(map[i][j] == 'W'){
+                else if(map[i][j] == 'c'){
                      const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
-                else if(map[i][j] == 'N'){
+                else if(map[i][j] == 't'){
                      const wchar_t symbol[] = L"\U000027B3"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
@@ -428,17 +443,17 @@ void toggle_map_reveal(room** rooms) {
                 mvaddnwstr(i, j, symbol, -1);
                 }
                 /////////dagger partab shode
-                else if(map [i][j] == 'a'){
+                else if(map [i][j] == 'D'){
                 const wchar_t symbol[] = L"\U0001F5E1"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
                 ///////////normal arrow partab shode
-                else if(map [i][j] == 't'){
+                else if(map [i][j] == 'N'){
                  const wchar_t symbol[] = L"\U000027B3"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
                 ///////////////magic wand partab shode
-                else if(map [i][j] == 'c'){
+                else if(map [i][j] == 'W'){
                   const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }

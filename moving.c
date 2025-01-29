@@ -166,11 +166,11 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
             weapons[0]->count += 10;
             map [newy] [newx] = '.';
         }
-        else if(space == 'W'){
+        else if(space == 'c'){
             weapons[3]->count += 8;
             map [newy] [newx] = '.';
         }
-        else if(space == 'N'){
+        else if(space == 't'){
             weapons[4]->count += 20;
             map [newy] [newx] = '.';
         }
@@ -196,6 +196,20 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
             update_message_box("This is black gold! You earned 8 pieces of gold!");
             map [newy] [newx] = '.';
         }
+        else if(space == 'D'){
+                weapons[0]->count++;
+                map [newy] [newx] = '.';
+                }
+                ///////////normal arrow partab shode
+                else if(space == 'N'){
+                 weapons[4]->count++;
+                 map [newy] [newx] = '.';
+                }
+                ///////////////magic wand partab shode
+                else if(space == 'W'){
+                   weapons[3]->count++;
+                   map [newy] [newx] = '.';
+                }
         if(map [user->position.y][user ->position.x] == '='){
                 for(int i=rooms[2]->position.x; i<rooms[2]->position.x+rooms[2]->width; i++){
                 for(int j=rooms[2]->position.y; j<rooms[2]->position.y+rooms[2]->height; j++){
@@ -250,11 +264,11 @@ int playermove(int y, int x, player* user) {
                      const wchar_t symbol[] = L"\U0001F5E1"; 
                     mvaddnwstr(j, i, symbol, -1);
                 }
-                else if(map[j][i] == 'W'){
+                else if(map[j][i] == 'c'){
                      const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
-                else if(map[j][i] == 'N'){
+                else if(map[j][i] == 't'){
                      const wchar_t symbol[] = L"\U000027B3"; 
                     mvaddnwstr(j, i, symbol, -1);
                 }
@@ -277,6 +291,20 @@ int playermove(int y, int x, player* user) {
                 else if(map [j][i] == 'n'){
                    const wchar_t symbol[] = L"\U0001F6E2"; 
                 mvaddnwstr(j, i, symbol, -1);
+                }
+                else if(map [i][j] == 'D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
+                ///////////normal arrow partab shode
+                else if(map [i][j] == 'N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(i, j, symbol, -1);
+                }
+                ///////////////magic wand partab shode
+                else if(map [i][j] == 'W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(i, j, symbol, -1);
                 }
                 }
             }
@@ -549,6 +577,7 @@ void hit_enemy(player* user, monster** monsters){
     }
     ///////////////////////////////////other weapons that are long range
     else{
+         user->default_weapon->count--;
         keypad(stdscr, TRUE);
         int dir;
         dir = getch();
@@ -558,7 +587,7 @@ void hit_enemy(player* user, monster** monsters){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
-                            user->default_weapon->count--;
+                            
                             if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
                             else if(monsters[i]->health <= 0){
                                 update_message_box("You killed the enemy!");
@@ -568,20 +597,40 @@ void hit_enemy(player* user, monster** monsters){
                         }
                     }
                 }
-                
+                for(int j = user->default_weapon->range; j>0; j--){
+                    if(map [user->position.y-j][user->position.x] == '.'){
+                        map [user->position.y-j][user->position.x] = user->default_weapon->name;
+                        print_visited(user, rooms);
+                            attron(COLOR_PAIR(user ->color));
+                            mvprintw(user->position.y, user->position.x, "p");
+                            attroff(COLOR_PAIR(user ->color));
+                        return;
+                    }
+                }
                 break;
             case KEY_DOWN:
                 for(int i= 0; i<3; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
-                            user->default_weapon->count--;
+                           
                             if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
                             else if(monsters[i]->health <= 0){
                                 update_message_box("You killed the enemy!");
                                 user->score += (monsters[i]->power*2);
                             }
+                        return;
                         }
+                    }
+                }
+                for(int j = user->default_weapon->range; j>0; j--){
+                    if(map [user->position.y+j][user->position.x] == '.'){
+                        map [user->position.y+j][user->position.x] = user->default_weapon->name;
+                        print_visited(user, rooms);
+                            attron(COLOR_PAIR(user ->color));
+                            mvprintw(user->position.y, user->position.x, "p");
+                            attroff(COLOR_PAIR(user ->color));
+                        return;
                     }
                 }
                 break;
@@ -590,13 +639,23 @@ void hit_enemy(player* user, monster** monsters){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x+j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
-                            user->default_weapon->count--;
                             if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
                             else if(monsters[i]->health <= 0){
                                 update_message_box("You killed the enemy!");
                                 user->score += (monsters[i]->power*2);
                             }
+                            return;
                         }
+                    }
+                }
+                for(int j = user->default_weapon->range; j>0; j--){
+                    if(map [user->position.y][user->position.x+j] == '.'){
+                        map [user->position.y][user->position.x+j] = user->default_weapon->name;
+                        print_visited(user, rooms);
+                            attron(COLOR_PAIR(user ->color));
+                            mvprintw(user->position.y, user->position.x, "p");
+                            attroff(COLOR_PAIR(user ->color));
+                        return;
                     }
                 }
                 break;
@@ -605,13 +664,23 @@ void hit_enemy(player* user, monster** monsters){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x-j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
-                            user->default_weapon->count--;
                             if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
                             else if(monsters[i]->health <= 0){
                                 update_message_box("You killed the enemy!");
                                 user->score += (monsters[i]->power*2);
                             }
+                            return;
                         }
+                    }
+                }
+                for(int j = user->default_weapon->range; j>0; j--){
+                    if(map [user->position.y][user->position.x-j] == '.'){
+                        map [user->position.y][user->position.x-j] = user->default_weapon->name;
+                        print_visited(user, rooms);
+                            attron(COLOR_PAIR(user ->color));
+                            mvprintw(user->position.y, user->position.x, "p");
+                            attroff(COLOR_PAIR(user ->color));
+                        return;
                     }
                 }
                 break;
@@ -620,4 +689,5 @@ void hit_enemy(player* user, monster** monsters){
     refresh();
     beneath_box(user);
 }
+
 
