@@ -14,7 +14,9 @@ extern int count_damage;
 int handleinput(int input, player* user, monster** monsters) {
     if(input==' '){
         hit_enemy(user, monsters);
+        monstermove(rooms, monsters, user);
     }
+    
     keypad(stdscr, TRUE);
     static int pressed_g = 0;
     static int fast_move_mode = 0; 
@@ -148,7 +150,7 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
           if (space == '$') {
             user->money += 4;  
             user->score += 2; 
-            update_message_box("You earned 4 pieces of gold!");       
+            update_message_box("You earned 4 pieces of gold!", 0);       
             map[newy][newx] = '.'; 
         }
         //////////////////////////////////////////different food types
@@ -156,21 +158,21 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
             //normal  food in rooms 0, 1, 2, 5, 8
 if(checkinroom(user, rooms[0]) == 1 ||checkinroom(user, rooms[1]) == 1 ||checkinroom(user, rooms[2]) == 1 ||checkinroom(user, rooms[5]) == 1 ||checkinroom(user, rooms[8]) == 1 ){
             if(user ->count_food + user->count_perfect_food<5 ){
-            update_message_box("You found some food!"); 
+            update_message_box("You found some food!", 0); 
             user ->count_food ++;  
             map[newy][newx] = '.';  }
         }
         //power food in rooms 3, 7
 else if(checkinroom(user, rooms[3]) == 1 ||checkinroom(user, rooms[7]) == 1 ){
         if(user ->count_food + user->count_perfect_food < 5){
-            update_message_box("You found some power food! It can also increase your power temporarily"); 
+            update_message_box("You found some power food! It can also increase your power temporarily", 0); 
             user ->count_perfect_food ++;
              
             map[newy][newx] = '.';  }
         }
 else if(checkinroom(user, rooms[4]) == 1 ||checkinroom(user, rooms[6]) == 1 ){
         
-            update_message_box("Haha it was rotten food!"); 
+            update_message_box("Haha it was rotten food!", 0); 
             user ->health -= 2;  
             map[newy][newx] = '.';  
         }
@@ -210,7 +212,7 @@ else if(checkinroom(user, rooms[4]) == 1 ||checkinroom(user, rooms[6]) == 1 ){
         else if(space == 'n'){
             user ->money +=8;
             user->score += 4;
-            update_message_box("This is black gold! You earned 8 pieces of gold!");
+            update_message_box("This is black gold! You earned 8 pieces of gold!", 0);
             map [newy] [newx] = '.';
         }
         else if(space == 'D'){
@@ -254,7 +256,7 @@ int playermove(int y, int x, player* user) {
 ||(level == 4 && (y == rooms[4]->position.y + 5 && x == rooms[4]->position.x +3))){
     map [y][x] = '^';
     user->health -= 4;
-    update_message_box("you fell into a trap");}
+    update_message_box("you fell into a trap", 0);}
     if(user->consumed_damage_potion==1){
         weapons[0]->damage = 24;      
     weapons[1]->damage = 10;
@@ -367,7 +369,7 @@ int playermove(int y, int x, player* user) {
             printw("You Lost!");
             updateUser("scoreboard.txt", user->username, user);
             getch();
-            endwin();
+            pregame(user);
             return;
         }
     if(level == 4 && rooms[4]->visited == 1 && nogoldremain(rooms[4]) == 1){
@@ -376,7 +378,7 @@ int playermove(int y, int x, player* user) {
             user->score += 40;
             updateUser("scoreboard.txt", user->username, user);
             getch();
-            endwin();
+            pregame(user);
             return;
     }
     if(map [y][x] == '#'){
@@ -399,27 +401,7 @@ int playermove(int y, int x, player* user) {
             attroff(COLOR_PAIR(user ->color));    
                 visited [user->position.y][user->position.x]=1;
     }
-    //////////////////////////////////////monster move
-    if(rooms[1]->visited == 1 && (monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){
-      pathsirish(monsters[0], user);
-    
-    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
-     if(rooms[5]->visited == 1 && (monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){
-      pathsirish(monsters[1], user);
-    
-    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
-     if(rooms[7]->visited == 1 && (monsters[2]->name=='S'||monsters[2]->name=='U') && monsters[2]->health>0){
-      pathsirish(monsters[2], user);
-    
-    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
-    else if(checkinroom(user, rooms[1])==1&&!(monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){    pathfindingseek(monsters[0], user);
-    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
-
-    else if(checkinroom(user, rooms[5])==1&&!(monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){    pathfindingseek(monsters[1], user);
-    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
-
-    else if(checkinroom(user, rooms[7])==1&&!(monsters[2]->name=='S'||monsters[2]->name=='U')&& monsters[2]->health>0){    pathfindingseek(monsters[2], user);
-    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
+    monstermove(rooms, monsters, user);
      
     refresh();
     /////////////////////////////////////////////////////next level
@@ -454,7 +436,7 @@ int playermove(int y, int x, player* user) {
         mvprintw(user->position.y, user->position.x, "p");
         attroff(COLOR_PAIR(user ->color));
         message_box();
-        update_message_box("You entered a new level!");
+        update_message_box("You entered a new level!", 0);
 
         refresh();
         int ch;
@@ -492,7 +474,7 @@ int pathfindingseek(monster* monster, player* user) {
     int dy = abs(monster->position.y - user->position.y);
     if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
-        update_message_box("The monster hit you");
+        update_message_box("The monster hit you", 1);
         return 0;
     }
 
@@ -517,23 +499,23 @@ int pathfindingseek(monster* monster, player* user) {
      dy = abs(monster->position.y - user->position.y);
      if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
-        update_message_box("The monster hit you");
+        update_message_box("The monster hit you", 1);
         
     }
     return 1; 
 }
 int pathsirish(monster* monster, player* user){
     
-int dx = abs(monster->position.x - user->position.x);
+    int dx = abs(monster->position.x - user->position.x);
     int dy = abs(monster->position.y - user->position.y);
     if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
-        update_message_box("The monster hit you");
+        update_message_box("The monster hit you", 1);
         return 0;
     }
 
-    if (dx > dy) {
-        if (monster->position.x >= user->position.x && (map[monster->position.y] [monster->position.x - 1] == '.'||map[monster->position.y] [monster->position.x - 1]=='+'
+    
+        if (monster->position.x > user->position.x && (map[monster->position.y] [monster->position.x - 1] == '.'||map[monster->position.y] [monster->position.x - 1]=='+'
         ||map[monster->position.y] [monster->position.x - 1]=='#'||map[monster->position.y] [monster->position.x - 1] == '@')) {
            
             monster->position.x--; 
@@ -542,9 +524,8 @@ int dx = abs(monster->position.x - user->position.x);
            
             monster->position.x++; 
         }
-    } 
-    else { 
-        if (monster->position.y >= user->position.y && (map[monster->position.y - 1] [monster->position.x] == '.'||map[monster->position.y - 1] [monster->position.x] == '+'
+     
+        else if (monster->position.y > user->position.y && (map[monster->position.y - 1] [monster->position.x] == '.'||map[monster->position.y - 1] [monster->position.x] == '+'
         ||map[monster->position.y - 1] [monster->position.x] == '#'||map[monster->position.y - 1] [monster->position.x] == '@')) {
             
             monster->position.y--; 
@@ -553,12 +534,12 @@ int dx = abs(monster->position.x - user->position.x);
             
             monster->position.y++; 
         }
-    } 
+
      dx = abs(monster->position.x - user->position.x);
      dy = abs(monster->position.y - user->position.y);
      if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){
         user->health -= monster->power;
-        update_message_box("The monster hit you");        
+        update_message_box("The monster hit you",1 );        
     }
     return 1;   
 }
@@ -576,36 +557,36 @@ void hit_enemy(player* user, monster** monsters){
             if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+1 && monsters[i]->health>0){
                 monsters[i]->health -= user->default_weapon->damage;
                 
-                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                 else if(monsters[i]->health <= 0){
-                    update_message_box("You killed the enemy!");
+                    update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
                 }
             }
             else if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-1 && monsters[i]->health>0){
                 monsters[i]->health -= user->default_weapon->damage;
                 
-                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                 else if(monsters[i]->health <= 0){
-                    update_message_box("You killed the enemy!");
+                    update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
                 }
             }
             else if( monsters[i]->position.x == user->position.x+1 && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                 monsters[i]->health -= user->default_weapon->damage;
                 
-                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                 else if(monsters[i]->health <= 0){
-                    update_message_box("You killed the enemy!");
+                    update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
                 }
             }
             else if( monsters[i]->position.x == user->position.x-1 && monsters[i]->position.y == user->position.y+1 && monsters[i]->health>0){
                 monsters[i]->health -= user->default_weapon->damage;
                 
-                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                 else if(monsters[i]->health <= 0){
-                    update_message_box("You killed the enemy!");
+                    update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
                 }
             }
@@ -624,9 +605,9 @@ void hit_enemy(player* user, monster** monsters){
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
                             
-                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                             else if(monsters[i]->health <= 0){
-                                update_message_box("You killed the enemy!");
+                                update_message_box("You killed the enemy!", 0);
                                 user->score += (monsters[i]->power*2);
                             }
                             return;
@@ -650,9 +631,9 @@ void hit_enemy(player* user, monster** monsters){
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
                            
-                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                             else if(monsters[i]->health <= 0){
-                                update_message_box("You killed the enemy!");
+                                update_message_box("You killed the enemy!", 0);
                                 user->score += (monsters[i]->power*2);
                             }
                         return;
@@ -675,9 +656,9 @@ void hit_enemy(player* user, monster** monsters){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x+j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
-                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                             else if(monsters[i]->health <= 0){
-                                update_message_box("You killed the enemy!");
+                                update_message_box("You killed the enemy!", 0);
                                 user->score += (monsters[i]->power*2);
                             }
                             return;
@@ -700,9 +681,9 @@ void hit_enemy(player* user, monster** monsters){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x-j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
-                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!");
+                            if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
                             else if(monsters[i]->health <= 0){
-                                update_message_box("You killed the enemy!");
+                                update_message_box("You killed the enemy!", 0);
                                 user->score += (monsters[i]->power*2);
                             }
                             return;
@@ -725,4 +706,25 @@ void hit_enemy(player* user, monster** monsters){
     refresh();
     beneath_box(user);
 }
+void monstermove(room **rooms, monster **monsters, player* user){
+        if(rooms[1]->visited == 1 && (monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){
+      pathsirish(monsters[0], user);
+    
+    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
+     if(rooms[5]->visited == 1 && (monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){
+      pathsirish(monsters[1], user);
+    
+    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
+     if(rooms[7]->visited == 1 && (monsters[2]->name=='S'||monsters[2]->name=='U') && monsters[2]->health>0){
+      pathsirish(monsters[2], user);
+    
+    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
+    else if(checkinroom(user, rooms[1])==1&&!(monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){    pathfindingseek(monsters[0], user);
+    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
 
+    else if(checkinroom(user, rooms[5])==1&&!(monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){    pathfindingseek(monsters[1], user);
+    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
+
+    else if(checkinroom(user, rooms[7])==1&&!(monsters[2]->name=='S'||monsters[2]->name=='U')&& monsters[2]->health>0){    pathfindingseek(monsters[2], user);
+    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
+}

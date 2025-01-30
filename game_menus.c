@@ -38,7 +38,7 @@ void food_menu(player* user){
             printw(" ! ");       
     }  
     else if(c == 'p' && user ->count_perfect_food > 0){
-               user ->count_food --;
+               user ->count_perfect_food --;
                user ->health += 4;  if(user ->health > user ->Maxhealth)    user->health = user->Maxhealth;
                user ->unhungry += 2;
                clear();

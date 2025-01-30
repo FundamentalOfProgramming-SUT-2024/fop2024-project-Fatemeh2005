@@ -1,4 +1,1 @@
-fati,FATi12345,fati@g.c
-ali,ALIjooni123,ali@g.c
-gholi,gholiGoli1234,ggg@fff.vvv
-karim,Karimjoon123,k@g.v
+fati,Fati1234,f@f.f

@@ -493,7 +493,7 @@ void toggle_map_reveal(player* user,room** rooms) {
                 attroff(COLOR_PAIR(4));
                     }
     }
-                else {
+            else {
 if (level == 4 && i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
 i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.x) {
     attron(COLOR_PAIR(1));
@@ -536,10 +536,13 @@ void message_box(){
     for(int i = 1; i < terminal_width;i++){
         mvprintw(1,i," ");
     }
+    for(int i = 1; i < terminal_width;i++){
+        mvprintw(2,i," ");
+    }
 }
-void update_message_box(const char* message) {
+void update_message_box(const char* message, int i) {
     
-    mvprintw(1, 2, "%s", message);
+    mvprintw(1+i, 2, "%s", message);
 
     refresh();
 }

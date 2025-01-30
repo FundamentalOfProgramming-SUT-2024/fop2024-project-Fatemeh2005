@@ -11,12 +11,19 @@
 #define level_options 3
 
 #define MAX_LINE 100 
-#define TEMP_FILE "temp.txt"  
+#define TEMP_FILE "temp.txt" 
+
+extern char** map;
+extern int level;
+extern int ** visited;
+extern int terminal_width;
+extern int terminal_height;
 
 typedef struct {
     char name[MAX_LINE];
     int score;
     int experience;
+    int allmoney;
 } User;
 
 void pregame(player* user) {
@@ -196,7 +203,6 @@ int color_choose_menu() {
         }
     }
 }
-
 int level_choose_menu() {
     cbreak();
     noecho();
@@ -238,7 +244,6 @@ int level_choose_menu() {
         }
     }
 }
-
 void updateUser(const char *filename, char targetUser[MAX_LINE], player* user) {
     FILE *file = fopen(filename, "r");
     FILE *temp = fopen(TEMP_FILE, "w");
@@ -255,14 +260,16 @@ void updateUser(const char *filename, char targetUser[MAX_LINE], player* user) {
         char name[MAX_LINE];
         int number;
         int experience;
+        int allmoney;
         // Trim newlines/spaces and parse data correctly
-        if (sscanf(line, " %[^,], %d, %d ", name, &number, &experience) == 3) {
+        if (sscanf(line, " %[^,], %d, %d, %d ", name, &number, &experience, &allmoney) == 4) {
             if (strcmp(name, targetUser) == 0) {
                 number += user->score;  // Increase the score
+                allmoney += user->money;
                 experience ++;
                 found = 1;
             }
-            fprintf(temp, "%s, %d, %d\n", name, number, experience);
+            fprintf(temp, "%s, %d, %d, %d\n", name, number, experience, allmoney);
         } else {
             fprintf(temp, "%s", line);  // Keep lines that don’t match format
         }
@@ -294,6 +301,7 @@ void sortUsers(User users[], int count) {
 }
 
 void printScoreboard(const char *filename, player* user) {
+    clear();
      setlocale(LC_ALL, "");
     const wchar_t cup[] = L"\U0001F3C6"; 
     const wchar_t silver_medal[] = L"\U0001F948";
@@ -312,7 +320,7 @@ void printScoreboard(const char *filename, player* user) {
     while (fgets(line, sizeof(line), file)) {
         if (count >= 100) break;  // Prevent overflow
 
-        if (sscanf(line, " %[^,], %d, %d ", users[count].name, &users[count].score, &users[count].experience) == 3) {
+        if (sscanf(line, " %[^,], %d, %d, %d ", users[count].name, &users[count].score, &users[count].experience, &users[count].allmoney) == 4) {
             count++;
         }
     }
@@ -323,7 +331,7 @@ void printScoreboard(const char *filename, player* user) {
 
     // Print sorted scoreboard
     printw("\nSorted Scoreboard:\n");
-    printw("    name  -  score -  experience\n");
+    printw("    name  -  score -  experience - money gathered\n");
     printw("----------------------\n");
     for (int i = 0; i < count; i++) {
         if(i == 0){
@@ -333,7 +341,7 @@ void printScoreboard(const char *filename, player* user) {
             addwstr(cup);
             attron(COLOR_PAIR(1));
             
-          printw(" GOAT:%s - %d - %d\n", users[i].name, users[i].score, users[i].experience);
+          printw(" GOAT:%s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);
                         attroff(COLOR_PAIR(1));
           }
         else if(i == 1){ 
@@ -342,7 +350,7 @@ void printScoreboard(const char *filename, player* user) {
             }
              addwstr(silver_medal); 
          attron(COLOR_PAIR(6));
-         printw(" Legend:%s - %d - %d\n", users[i].name, users[i].score, users[i].experience);
+         printw(" Legend:%s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);
          attroff(COLOR_PAIR(6));}
         else if(i==2){
             if(addingflash(user->username, users[i].name)==1){
@@ -350,12 +358,12 @@ void printScoreboard(const char *filename, player* user) {
             }
             addwstr(bronze_medal); 
          attron(COLOR_PAIR(3));
-          printw("chill guy:%s - %d - %d\n", users[i].name, users[i].score, users[i].experience);
+          printw("chill guy:%s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);
           attroff(COLOR_PAIR(3));}
         else{
             if(addingflash(user->username, users[i].name)==1){
                 printw("-->");}
-                 printw("       %s - %d - %d\n", users[i].name, users[i].score, users[i].experience);}
+                 printw("       %s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);}
     }
     printw("----------------------\n");
 }

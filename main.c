@@ -10,11 +10,13 @@
 static int map_revealed = 0;
 char** map;
 int level;
- room** rooms;
+room** rooms;
 int ** visited;
 monster** monsters;
 weapon** weapons;
 int count_damage;
+int terminal_width;
+int terminal_height;
 int main() {
     player* user = malloc(sizeof(player));
     user ->health = 30;
@@ -35,11 +37,30 @@ int main() {
     init_pair(4, COLOR_GREEN, COLOR_BLACK);
     init_pair(5, COLOR_BLUE, COLOR_BLACK);
     ////////gray color
-    init_color(8, 500, 500, 500); // Define gray (R,G,B values in range 0-1000)
+    init_color(8, 500, 500, 500); 
     init_pair(6, 8, COLOR_BLACK); 
 
     bkgd(COLOR_PAIR(2)); 
     refresh;
+    //int terminal_height, terminal_width;
+    getmaxyx(stdscr, terminal_height, terminal_width);
+    map = (char**)malloc(terminal_height * sizeof(char*));
+    for (int i = 0; i < terminal_height; i++) {
+        map[i] = (char*)malloc(terminal_width * sizeof(char));
+        memset(map[i], ' ', terminal_width);
+    }
+    visited = (int**)malloc(terminal_height * sizeof(int*));
+    for (int i = 0; i < terminal_height; i++) {
+        visited[i] = (int*)malloc(terminal_width * sizeof(int));
+    }
+    for (int i = 0; i < terminal_height; i++) {
+        for (int j = 0; j < terminal_width; j++) { 
+            visited[i][j] = 0;}
+    }
+    monsters = malloc(10* sizeof(monster*));
+    for(int i = 0;i<10; i++){
+        monsters[i] = malloc(sizeof(monster));
+    }
     while (1) {
         int selection = show_menu();
 
@@ -64,25 +85,6 @@ int main() {
     }
     noecho();
 
-    int terminal_height, terminal_width;
-    getmaxyx(stdscr, terminal_height, terminal_width);
-    map = (char**)malloc(terminal_height * sizeof(char*));
-    for (int i = 0; i < terminal_height; i++) {
-        map[i] = (char*)malloc(terminal_width * sizeof(char));
-        memset(map[i], ' ', terminal_width);
-    }
-    visited = (int**)malloc(terminal_height * sizeof(int*));
-    for (int i = 0; i < terminal_height; i++) {
-        visited[i] = (int*)malloc(terminal_width * sizeof(int));
-    }
-    for (int i = 0; i < terminal_height; i++) {
-        for (int j = 0; j < terminal_width; j++) { 
-            visited[i][j] = 0;}
-    }
-    monsters = malloc(10* sizeof(monster*));
-    for(int i = 0;i<10; i++){
-        monsters[i] = malloc(sizeof(monster));
-    }
      rooms = mapsetup();
      mark_visited_room( rooms[0]);
      print_visited(user, rooms);
@@ -158,6 +160,4 @@ void playersetup(player* user,room** rooms) {
     attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));
-   
 }
-

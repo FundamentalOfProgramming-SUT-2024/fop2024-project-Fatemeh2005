@@ -22,7 +22,6 @@ int login(const char *username, const char *password) {
             char *newline = strchr(stored_password, '\n');
             if (newline) *newline = '\0';
         }
-
         if (stored_username && stored_password &&
             strcmp(stored_username, username) == 0 &&
             strcmp(stored_password, password) == 0) {
@@ -30,7 +29,6 @@ int login(const char *username, const char *password) {
             return 1; 
         }
     }
-
     fclose(file);
     return 0; 
 }
@@ -232,7 +230,7 @@ int sign_in(player* user) {
 void save_to_scoreboard(const char *username) {
     FILE *file = fopen(SCOREBOARD_FILE, "a"); 
     if (file != NULL) {
-        fprintf(file, "%s, %d, %d\n", username, 0, 0);
+        fprintf(file, "%s, %d, %d, %d\n", username, 0, 0, 0);
         fclose(file);
     }
 }
