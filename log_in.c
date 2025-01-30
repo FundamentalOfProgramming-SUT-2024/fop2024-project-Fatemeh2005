@@ -5,6 +5,7 @@
 #include"pregame_menu.c"
 
 #define FILE_NAME "users.txt"
+#define SCOREBOARD_FILE "scoreboard.txt"
 
 int login(const char *username, const char *password) {
     FILE *file = fopen(FILE_NAME, "r"); 
@@ -58,6 +59,9 @@ int log_in(player* user) {
 
     if (login(name, password)) {
         printw( "Login successful!"); 
+        for(int i =0; i<30; i++){
+            user->username[i] = name[i];
+        }
         pregame(user); 
         getch(); 
         clear();
@@ -87,9 +91,6 @@ void save_user(const char *username, const char *password, const char *email) {
 
 int username_exists(const char *username) {
     FILE *file = fopen(FILE_NAME, "r"); 
-    if (file == NULL) {
-        return 0;  
-    }
 
     char line[100];
     while (fgets(line, sizeof(line), file)) {
@@ -211,7 +212,11 @@ int sign_in(player* user) {
     }
     else {
         save_user(name, password, email);   
-       // printw( "User registered successfully!");   
+       // printw( "User registered successfully!"); 
+       save_to_scoreboard(name); 
+       for(int i =0; i<30; i++){
+            user->username[i] = name[i];
+        } 
         pregame(user);
         getch();
         clear(); 
@@ -223,4 +228,11 @@ int sign_in(player* user) {
 
     delwin(win);  
     endwin(); 
+}
+void save_to_scoreboard(const char *username) {
+    FILE *file = fopen(SCOREBOARD_FILE, "a"); 
+    if (file != NULL) {
+        fprintf(file, "%s, %d, %d\n", username, 0, 0);
+        fclose(file);
+    }
 }

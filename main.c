@@ -34,6 +34,9 @@ int main() {
     init_pair(3, COLOR_RED, COLOR_BLACK);
     init_pair(4, COLOR_GREEN, COLOR_BLACK);
     init_pair(5, COLOR_BLUE, COLOR_BLACK);
+    ////////gray color
+    init_color(8, 500, 500, 500); // Define gray (R,G,B values in range 0-1000)
+    init_pair(6, 8, COLOR_BLACK); 
 
     bkgd(COLOR_PAIR(2)); 
     refresh;

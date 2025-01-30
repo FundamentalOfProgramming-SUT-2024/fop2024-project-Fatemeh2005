@@ -24,6 +24,7 @@ typedef struct room {
 } room;
 
 typedef struct player {
+    char username [50];
     int Maxhealth;
     int color;
     position position;
@@ -79,4 +80,9 @@ int pathfindingseek(monster* monsters, player* user);
 int pathsirish(monster* monster, player* user);
 int checkinroom(player*user, room*room);
 void hit_enemy(player* user, monster** monsters);
+void save_to_scoreboard(const char *username);
+int nogoldremain(room* room);
+void updateUser(const char *filename, char targetUser[], player* user);
+void printScoreboard(const char *filename, player* user);
+int addingflash(char user[], char users[]);
 #endif

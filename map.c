@@ -234,6 +234,11 @@ int random_potion = rand() % 3;
        monsters [2]->name = 'F';    monsters[2]->health = 10;    monsters[2]->power = 2;}
     monsters [2]->position.x=room->position.x + room->width-2;monsters [2]->position.y=room->position.y + room->height-2;
     }
+    if(k==4 && level == 4){
+        map[room->position.y + 1][room->position.x + room->width-2] = '$';
+        map [room->position.y + 2][room->position.x + room->width-3] = '$';
+        map [room->position.y + 5][room->position.x +5] = '$';
+    }
     refresh();
     return 1;
 }
@@ -545,4 +550,12 @@ void beneath_box(player * user){
         mvprintw(terminal_height- 5, 4, "Money : %d", user -> money);
         mvprintw(terminal_height- 5, 20, "Health : %d", user ->health);
         mvprintw(terminal_height- 5, 40, "Score : %d", user ->score);
+}
+int nogoldremain(room* room){
+    for(int i = room->position.x; i<room->position.x + room->width; i++){
+        for(int j = room->position.y; j<room->position.y + room->height; j++){
+            if(map[j][i] == '$')    return 0;
+        }
+    }
+    return 1;
 }

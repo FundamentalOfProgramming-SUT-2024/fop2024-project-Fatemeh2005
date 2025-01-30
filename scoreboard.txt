@@ -1,0 +1,4 @@
+fati, 16, 4
+ali, 0, 3
+gholi, 4, 1
+karim, 0, 0

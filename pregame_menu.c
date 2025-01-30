@@ -1,4 +1,6 @@
+#include <locale.h>
 #include <ncurses.h>
+#include <wchar.h>
 #include <stdlib.h>
 #include <string.h>
 #include "map.h"
@@ -7,6 +9,15 @@
 #define setting_options 3 
 #define color_options 3
 #define level_options 3
+
+#define MAX_LINE 100 
+#define TEMP_FILE "temp.txt"  
+
+typedef struct {
+    char name[MAX_LINE];
+    int score;
+    int experience;
+} User;
 
 void pregame(player* user) {
     while (1) {
@@ -28,6 +39,7 @@ void pregame(player* user) {
             break;
         } else if (selection == 2) {  // "Scoreboard"
             mvprintw(0, 0, "Displaying scoreboard...");
+            printScoreboard("scoreboard.txt", user);
             refresh();
             getch();  // Placeholder logic for scoreboard
         }
@@ -225,4 +237,128 @@ int level_choose_menu() {
                 break;
         }
     }
+}
+
+void updateUser(const char *filename, char targetUser[MAX_LINE], player* user) {
+    FILE *file = fopen(filename, "r");
+    FILE *temp = fopen(TEMP_FILE, "w");
+
+    if (!file || !temp) {
+        printw("Error opening file!\n");
+        return;
+    }
+
+    char line[MAX_LINE];
+    int found = 0;
+
+    while (fgets(line, sizeof(line), file)) {
+        char name[MAX_LINE];
+        int number;
+        int experience;
+        // Trim newlines/spaces and parse data correctly
+        if (sscanf(line, " %[^,], %d, %d ", name, &number, &experience) == 3) {
+            if (strcmp(name, targetUser) == 0) {
+                number += user->score;  // Increase the score
+                experience ++;
+                found = 1;
+            }
+            fprintf(temp, "%s, %d, %d\n", name, number, experience);
+        } else {
+            fprintf(temp, "%s", line);  // Keep lines that don’t match format
+        }
+    }
+
+    fclose(file);
+    fclose(temp);
+
+    if (found) {
+        remove(filename);  
+        rename(TEMP_FILE, filename);  
+       // printw("Updated successfully!\n");
+    } else {
+        remove(TEMP_FILE);
+        //printw("User not found!\n");
+    }
+}
+void sortUsers(User users[], int count) {
+    // Sort users by score in descending order (Bubble Sort)
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (users[j].score < users[j + 1].score) {
+                User temp = users[j];
+                users[j] = users[j + 1];
+                users[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void printScoreboard(const char *filename, player* user) {
+     setlocale(LC_ALL, "");
+    const wchar_t cup[] = L"\U0001F3C6"; 
+    const wchar_t silver_medal[] = L"\U0001F948";
+    const wchar_t bronze_medal[] = L"\U0001F949";
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    User users[100];
+    int count = 0;
+    char line[MAX_LINE];
+
+    // Read users from file
+    while (fgets(line, sizeof(line), file)) {
+        if (count >= 100) break;  // Prevent overflow
+
+        if (sscanf(line, " %[^,], %d, %d ", users[count].name, &users[count].score, &users[count].experience) == 3) {
+            count++;
+        }
+    }
+    fclose(file);
+
+    // Sort users by score
+    sortUsers(users, count);
+
+    // Print sorted scoreboard
+    printw("\nSorted Scoreboard:\n");
+    printw("    name  -  score -  experience\n");
+    printw("----------------------\n");
+    for (int i = 0; i < count; i++) {
+        if(i == 0){
+            if(addingflash(user->username, users[i].name)==1){
+                printw("-->");
+            } 
+            addwstr(cup);
+            attron(COLOR_PAIR(1));
+            
+          printw(" GOAT:%s - %d - %d\n", users[i].name, users[i].score, users[i].experience);
+                        attroff(COLOR_PAIR(1));
+          }
+        else if(i == 1){ 
+            if(addingflash(user->username, users[i].name)==1){
+                printw("-->");
+            }
+             addwstr(silver_medal); 
+         attron(COLOR_PAIR(6));
+         printw(" Legend:%s - %d - %d\n", users[i].name, users[i].score, users[i].experience);
+         attroff(COLOR_PAIR(6));}
+        else if(i==2){
+            if(addingflash(user->username, users[i].name)==1){
+                printw("-->");
+            }
+            addwstr(bronze_medal); 
+         attron(COLOR_PAIR(3));
+          printw("chill guy:%s - %d - %d\n", users[i].name, users[i].score, users[i].experience);
+          attroff(COLOR_PAIR(3));}
+        else{
+            if(addingflash(user->username, users[i].name)==1){
+                printw("-->");}
+                 printw("       %s - %d - %d\n", users[i].name, users[i].score, users[i].experience);}
+    }
+    printw("----------------------\n");
+}
+int addingflash(char user[], char users[]) {
+    return strcmp(user, users) == 0 ? 1 : 0;  // 1 if match, 0 otherwise
 }

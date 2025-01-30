@@ -150,7 +150,6 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
             user->score += 2; 
             update_message_box("You earned 4 pieces of gold!");       
             map[newy][newx] = '.'; 
-  
         }
         //////////////////////////////////////////different food types
         else if (space == 'f') {
@@ -248,8 +247,11 @@ int playermove(int y, int x, player* user) {
     if((y == rooms[6]->door[3].y && x == rooms[6]->door[3].x) || (y == rooms[6]->door[0].y && x == rooms[6]->door[0].x))
     map[y][x] = '?';
     if(checkinroom(user, rooms[6]) == 1)    user->health --;
-    /////////////////////////////////////////////////trap
-    if(y == rooms[2]->position.y + 3 && x == rooms[2]->position.x + rooms[2]->width-4){
+    /////////////////////////////////////////////////traps also alot for treasure room
+    if((y == rooms[2]->position.y + 3 && x == rooms[2]->position.x + rooms[2]->width-4)
+||(level == 4 && (y == rooms[4]->position.y + 1 && x == rooms[4]->position.x + rooms[4]->width-3))
+||(level == 4 && (y == rooms[4]->position.y + 2 && x == rooms[4]->position.x + rooms[4]->width-4))
+||(level == 4 && (y == rooms[4]->position.y + 5 && x == rooms[4]->position.x +3))){
     map [y][x] = '^';
     user->health -= 4;
     update_message_box("you fell into a trap");}
@@ -334,8 +336,6 @@ int playermove(int y, int x, player* user) {
                 }
             }
         }
-
-
     user->position.x = x;
     user->position.y = y;
 
@@ -361,13 +361,24 @@ int playermove(int y, int x, player* user) {
         
         user ->count_move2 = 0;
     }
+    ////////////////////////////////////////////////////////bord va bakht
     if(user->health<= 0){
             clear();
             printw("You Lost!");
+            updateUser("scoreboard.txt", user->username, user);
             getch();
             endwin();
             return;
         }
+    if(level == 4 && rooms[4]->visited == 1 && nogoldremain(rooms[4]) == 1){
+        clear();
+            printw("You Won!");
+            user->score += 40;
+            updateUser("scoreboard.txt", user->username, user);
+            getch();
+            endwin();
+            return;
+    }
     if(map [y][x] == '#'){
             for(int i = -2; i<3; i++){
                 for(int j = -2; j<3; j++){
@@ -714,5 +725,4 @@ void hit_enemy(player* user, monster** monsters){
     refresh();
     beneath_box(user);
 }
-
 
