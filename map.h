@@ -78,11 +78,12 @@ int level_choose_menu();
 void pregame(player* user);
 int pathfindingseek(monster* monsters, player* user);
 int pathsirish(monster* monster, player* user);
-int checkinroom(player*user, room*room);
+int checkinroom(player* user, room*room);
 void hit_enemy(player* user, monster** monsters);
 void save_to_scoreboard(const char *username);
 int nogoldremain(room* room);
 void updateUser(const char *filename, char targetUser[], player* user);
 void printScoreboard(const char *filename, player* user);
 int addingflash(char user[], char users[]);
+int monsterinroom(monster* monster, room* room);
 #endif
