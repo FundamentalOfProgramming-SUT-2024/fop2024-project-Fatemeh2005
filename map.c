@@ -562,3 +562,74 @@ int nogoldremain(room* room){
     }
     return 1;
 }
+////////////////////////////////////////////////saving codes
+void savemap(char** map, char username[], int terminal_width, int terminal_height){
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%smap.txt", username);
+    FILE * file = fopen(filename, "w");
+        for(int i = 0; i<terminal_height; i++){
+            for(int j = 0; j < terminal_width; j++){
+                fprintf(file, "%c", map[i][j]);
+            }
+            fprintf(file, "\n");
+        }
+        fclose(file);
+}
+void savevisited(int** visited, char username[], int terminal_width, int terminal_height){
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%svisited.txt", username);
+    FILE * file = fopen(filename, "w");
+        for(int i = 0; i<terminal_height; i++){
+            for(int j = 0; j < terminal_width; j++){
+                fprintf(file, "%d", visited[i][j]);
+            }
+            fprintf(file, "\n");
+        }
+        fclose(file);
+}
+void saverooms(room** rooms, char username[]){
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%srooms.txt", username);
+    FILE * file = fopen(filename, "w"); 
+    for(int j = 0; j<9; j++){ 
+fprintf(file, "%d, %d, %d, %d, %d,", rooms[j]->visited, rooms[j]->position.x, rooms[j]->position.y, rooms[j]->height, rooms[j]->width);
+for(int i = 0; i<4; i++){
+    fprintf(file, "%d, %d,", rooms[j]->door[i].x, rooms[j]->door[i].y);
+}
+fprintf(file, "\n");
+    }
+    fclose(file);
+}
+void savemonsters(monster** monsters, char username[]){
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%smonsters.txt", username);
+    FILE * file = fopen(filename, "w"); 
+    for(int j = 0; j<3; j++){ 
+fprintf(file, "%d, %d, %c, %d, %d", monsters[j]->position.x, monsters[j]->position.y, monsters[j]->name, monsters[j]->health, monsters[j]->power);    
+fprintf(file, "\n");
+    }
+    fclose(file);    
+}
+void saveplayerstruct(player* user, int level){
+char filename[256];
+    snprintf(filename, sizeof(filename), "%splayerstruct.txt", user->username);
+    FILE * file = fopen(filename, "w"); 
+    fprintf(file,"%d, %s, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d",level, user-> username,
+    user-> Maxhealth,
+    user->color,
+    user->position.x,
+    user->position.y,
+    user->health,
+    user->count_move1,
+    user->count_move2,
+    user->count_move3,
+    user->count_food,
+    user->count_perfect_food,
+    user->unhungry,
+    user->money,
+    user -> default_weapon->name,
+    user->health_potion,user-> speed_potion,user-> damage_potion,
+    user->consumed_damage_potion,
+    user->score); 
+    fclose(file);       
+}

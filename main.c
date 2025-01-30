@@ -120,6 +120,13 @@ int main() {
         handleinput(ch, user,  monsters);
         
     }
+    ///////////////////////////////////////saving mechanism
+    savemap(map, user->username, terminal_width,terminal_height);
+    savevisited(visited, user->username, terminal_width, terminal_height);
+    savemonsters(monsters, user->username);
+    saverooms(rooms, user->username);   
+    saveplayerstruct(user, level); 
+    
     for (int i = 0; i < terminal_height; i++) {
         free(map[i]);
     }

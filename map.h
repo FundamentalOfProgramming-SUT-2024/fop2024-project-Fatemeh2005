@@ -16,7 +16,7 @@ typedef struct weapon
 }weapon;
 typedef struct room {
     int visited;
-    int level;
+   
     position position;
     int height;
     int width;
@@ -86,4 +86,10 @@ void updateUser(const char *filename, char targetUser[], player* user);
 void printScoreboard(const char *filename, player* user);
 int addingflash(char user[], char users[]);
 int monsterinroom(monster* monster, room* room);
+////////////////////////save mechanism
+void savemap(char** map, char username[], int terminal_width, int terminal_height);
+void savevisited(int** map, char username[], int terminal_width, int terminal_height);
+void saverooms(room** room, char username[]);
+void savemonsters(monster** monsters, char username[]);
+void saveplayerstruct(player* user, int level); 
 #endif
