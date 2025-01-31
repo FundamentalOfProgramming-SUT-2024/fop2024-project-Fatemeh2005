@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 #include "map.h"
 #include "moving.c"
 #include "main_menu.c"
@@ -14,16 +15,18 @@ room** rooms;
 int ** visited;
 monster** monsters;
 weapon** weapons;
-int count_damage;
 int terminal_width;
 int terminal_height;
+int count_damage;
 int main() {
+    count_damage = 0;
     player* user = malloc(sizeof(player));
     user ->health = 30;
     user->Maxhealth = 30;
-    count_damage = 0;
     
     level = 1;
+    int * levelpointer;
+    levelpointer = & level;
     initscr();
     cbreak();
     keypad(stdscr, TRUE);
@@ -61,19 +64,57 @@ int main() {
     for(int i = 0;i<10; i++){
         monsters[i] = malloc(sizeof(monster));
     }
+     rooms = malloc(sizeof(room*) * 9);
+    for(int i = 0; i<9; i++){
+         rooms[i] = malloc(sizeof(room));
+    }
+    weapons = malloc(10*sizeof(weapon*));
+     for(int i = 0; i<5;i++){
+        weapons[i] = malloc(sizeof(weapon));
+     }
+    weapons[0]->name = 'D';     weapons[0]->count = 0;      weapons[0]->damage = 12;      weapons[0]->range = 5;     
+    weapons[1]->name = 'M';     weapons[1]->count = 1;      weapons[1]->damage = 5;      weapons[1]->range = 1;
+    weapons[2]->name = 'S';     weapons[2]->count = 0;      weapons[2]->damage = 10;      weapons[2]->range = 1;
+    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;      weapons[3]->range = 10;
+    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;      weapons[4]->range = 5;
     while (1) {
         int selection = show_menu();
 
         if (selection == 0) {
             int enter = sign_in(user);
-            if(enter){
+            if(enter ==1){
+     mapsetup(rooms);
+     mark_visited_room( rooms[0]);
+     print_visited(user, rooms);
+     message_box();
+    
+     playersetup(user,rooms);
                 break;
-            }  
+            } 
+             
             
         } else if (selection == 1) {
             int enter =log_in(user);   
-            if(enter){
+            if(enter==1){
+     mapsetup(rooms);
+     mark_visited_room( rooms[0]);
+     print_visited(user, rooms);
+     message_box();
+    
+     playersetup(user,rooms);
                 break;
+            }
+            if(enter == 2)
+ {      playersetup(user, rooms);
+    loadmap( map,  user->username,  terminal_width,  terminal_height);
+
+loadrooms( rooms, user->username);
+loadmonsters( monsters, user->username);
+loadplayerstruct( user, levelpointer);
+ loadvisited( visited, user->username,  terminal_width,  terminal_height);
+      print_visited(user, rooms);
+          message_box();
+            break;
             }
         }
         else if(selection == 2){
@@ -84,13 +125,6 @@ int main() {
         }
     }
     noecho();
-
-     rooms = mapsetup();
-     mark_visited_room( rooms[0]);
-     print_visited(user, rooms);
-     message_box();
-    
-     playersetup(user,rooms);
 
     int ch;
     while ((ch = getch()) != 'q') {
@@ -136,10 +170,7 @@ int main() {
     return 0;
 }
 void playersetup(player* user,room** rooms) {
-    weapons = malloc(10*sizeof(weapon*));
-     for(int i = 0; i<5;i++){
-        weapons[i] = malloc(sizeof(weapon));
-     }
+    
     
     user->position.x = rooms[0]->position.x + 1;
     user->position.y = rooms[0]->position.y + 1;
@@ -159,11 +190,7 @@ void playersetup(player* user,room** rooms) {
     user->default_weapon = weapons[1];
     ////////////////////////weapon initilizing
      
-    weapons[0]->name = 'D';     weapons[0]->count = 0;      weapons[0]->damage = 12;      weapons[0]->range = 5;     
-    weapons[1]->name = 'M';     weapons[1]->count = 1;      weapons[1]->damage = 5;      weapons[1]->range = 1;
-    weapons[2]->name = 'S';     weapons[2]->count = 0;      weapons[2]->damage = 10;      weapons[2]->range = 1;
-    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;      weapons[3]->range = 10;
-    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;      weapons[4]->range = 5;
+
     attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
     attroff(COLOR_PAIR(user ->color));

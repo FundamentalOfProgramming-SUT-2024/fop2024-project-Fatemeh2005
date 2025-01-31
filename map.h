@@ -24,7 +24,7 @@ typedef struct room {
 } room;
 
 typedef struct player {
-    char username [50];
+    char username [30];
     int Maxhealth;
     int color;
     position position;
@@ -51,8 +51,8 @@ typedef struct monster {
 
 int mark_visited_room(room* room);
 int print_visited(player* user,room** rooms);
-room** mapsetup();                    
-room* createroom(int i, int y, int x, int height, int width);  
+void mapsetup(room** rooms);                    
+void createroom(room* newroom, int i, int y, int x, int height, int width);  
 int drawroom(int k,room* room);              
 void connect_rooms_right(room* room1, room* room2); 
 void connect_rooms_top(room* room1, room* room2);    
@@ -75,7 +75,7 @@ int pregame_menu();
 int setting_menu();
 int color_choose_menu();
 int level_choose_menu();
-void pregame(player* user);
+int pregame(player* user);
 int pathfindingseek(monster* monsters, player* user);
 int pathsirish(monster* monster, player* user);
 int checkinroom(player* user, room*room);
@@ -92,4 +92,9 @@ void savevisited(int** map, char username[], int terminal_width, int terminal_he
 void saverooms(room** room, char username[]);
 void savemonsters(monster** monsters, char username[]);
 void saveplayerstruct(player* user, int level); 
+void loadmap(char** map, char username[], int terminal_width, int terminal_height);
+void loadvisited(int** visited, char username[], int terminal_width, int terminal_height);
+void loadrooms(room** room, char username[]);
+void loadmonsters(monster** monsters, char username[]);
+void loadplayerstruct(player* user, int*levelpointer); 
 #endif

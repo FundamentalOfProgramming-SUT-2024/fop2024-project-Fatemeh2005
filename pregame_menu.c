@@ -26,9 +26,10 @@ typedef struct {
     int allmoney;
 } User;
 
-void pregame(player* user) {
+int pregame(player* user) {
+    int selection;
     while (1) {
-        int selection = pregame_menu();
+         selection = pregame_menu();
 
         if (selection == 3) {  // "Settings" option
             setting(user); 
@@ -42,6 +43,7 @@ void pregame(player* user) {
             // Resume the game logic
             mvprintw(0, 0, "Resuming game...");
             refresh();
+
             getch();  // Placeholder logic for resuming the game
             break;
         } else if (selection == 2) {  // "Scoreboard"
@@ -51,6 +53,7 @@ void pregame(player* user) {
             getch();  // Placeholder logic for scoreboard
         }
     }
+    return (selection+1);
 }
 
 int pregame_menu() {

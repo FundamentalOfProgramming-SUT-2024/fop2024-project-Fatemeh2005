@@ -10,7 +10,7 @@ extern int ** visited;
 extern monster** monsters;
 extern weapon** weapons;
 
-room** mapsetup() {
+void mapsetup(room** rooms) {
 
     int terminal_height, terminal_width;
     getmaxyx(stdscr, terminal_height, terminal_width);
@@ -23,7 +23,6 @@ room** mapsetup() {
     int margin = 4;
 
     int room_count = 9;
-    room** rooms = malloc(sizeof(room*) * room_count);
 
     for (int i = 0; i < room_count; i++) {
         int region_y = (i / 3) * cell_height;
@@ -35,7 +34,7 @@ room** mapsetup() {
         int x = region_x + margin + rand() % (cell_width - width - 2 * margin + 1);
         int y = region_y + margin + rand() % (cell_height - height - 2 * margin + 1);
 
-        rooms[i] = createroom( i,y, x, height, width);
+         createroom(rooms[i], i,y, x, height, width);
     }
 
     connect_rooms_right(rooms[0], rooms[1]);
@@ -56,12 +55,9 @@ room** mapsetup() {
     map[rooms[4]->position.y+rooms[4]->height-1][rooms[4]->position.x+rooms[4]->width-1] = '&';
 
     //generating_monsters( rooms);
-
-    return rooms;
 }
 // tabaghe akhar teme 5 omin otaghesho ganj mikonam
-room* createroom(int i,int y, int x, int height, int width) {
-    room* newroom = malloc(sizeof(room));
+void createroom(room* newroom, int i,int y, int x, int height, int width) {
 
     newroom->position.x = x;
     newroom->position.y = y;
@@ -80,7 +76,6 @@ room* createroom(int i,int y, int x, int height, int width) {
     
     drawroom(i, newroom);
     
-    return newroom;
 }
 
 int drawroom(int k, room* room) {
@@ -581,7 +576,7 @@ void savevisited(int** visited, char username[], int terminal_width, int termina
     FILE * file = fopen(filename, "w");
         for(int i = 0; i<terminal_height; i++){
             for(int j = 0; j < terminal_width; j++){
-                fprintf(file, "%d", visited[i][j]);
+                fprintf(file, "%d ", visited[i][j]);
             }
             fprintf(file, "\n");
         }
@@ -614,7 +609,7 @@ void saveplayerstruct(player* user, int level){
 char filename[256];
     snprintf(filename, sizeof(filename), "%splayerstruct.txt", user->username);
     FILE * file = fopen(filename, "w"); 
-    fprintf(file,"%d, %s, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d",level, user-> username,
+    fprintf(file,"%d,  %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d",level,
     user-> Maxhealth,
     user->color,
     user->position.x,
@@ -632,4 +627,140 @@ char filename[256];
     user->consumed_damage_potion,
     user->score); 
     fclose(file);       
+}
+void loadvisited(int** visited, char username[], int terminal_width, int terminal_height) {
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%svisited.txt", username);
+    
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printw("Error opening file\n");
+        return;
+    }
+    
+    for (int i = 0; i < terminal_height; i++) {
+        for (int j = 0; j < terminal_width; j++) {
+            int result = fscanf(file, "%d", &visited[i][j]);
+            if (result != 1) {
+                // Debugging output to help identify the issue
+                if (result == EOF) {
+                    printw("Reached end of file unexpectedly.\n");
+                } else {
+                    printw("Error reading visited data at position [%d][%d]\n", i, j);
+                }
+                fclose(file);
+                return;
+            }
+        }
+    }
+    
+    fclose(file);
+}
+
+void loadmonsters(monster** monsters, char username[]) {
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%smonsters.txt", username);
+    
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printw("Error opening file3");
+        return;
+    }
+    
+    for (int j = 0; j < 3; j++) {
+        fscanf(file, "%d, %d, %c, %d, %d", 
+               &monsters[j]->position.x, 
+               &monsters[j]->position.y, 
+               &monsters[j]->name, 
+               &monsters[j]->health, 
+               &monsters[j]->power);
+    }
+    
+    fclose(file);
+}
+
+void loadrooms(room** rooms, char username[]) {
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%srooms.txt", username);
+    
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printw("Error opening file4");
+        return;
+    }
+    
+    for (int j = 0; j < 9; j++) {
+        fscanf(file, "%d, %d, %d, %d, %d,", 
+               &rooms[j]->visited, 
+               &rooms[j]->position.x, 
+               &rooms[j]->position.y, 
+               &rooms[j]->height, 
+               &rooms[j]->width);
+        
+        for (int i = 0; i < 4; i++) {
+            fscanf(file, "%d, %d,", 
+                   &rooms[j]->door[i].x, 
+                   &rooms[j]->door[i].y);
+        }
+    }
+    
+    fclose(file);
+}
+void loadplayerstruct(player* user, int* level) {
+    char filename[256];
+    snprintf(filename, sizeof(filename), "%splayerstruct.txt", user->username);
+    
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printw("Error opening file5");
+        return;
+    }
+    
+    fscanf(file, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d",
+           level, 
+           &user->Maxhealth,
+           &user->color,
+           &user->position.x,
+           &user->position.y,
+           &user->health,
+           &user->count_move1,
+           &user->count_move2,
+           &user->count_move3,
+           &user->count_food,
+           &user->count_perfect_food,
+           &user->unhungry,
+           &user->money,
+           &user->default_weapon->name,
+           &user->health_potion,
+           &user->speed_potion,
+           &user->damage_potion,
+           &user->consumed_damage_potion,
+           &user->score);
+    
+    fclose(file);
+}
+void loadmap(char** map, char username[], int terminal_width, int terminal_height) {
+    char filename[60];
+    snprintf(filename, sizeof(filename), "%smap.txt", username);
+    
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printw("Error opening file6");
+        return;
+    }
+    
+    for (int i = 0; i < terminal_height; i++) {
+        for (int j = 0; j < terminal_width; j++) {
+            char c = fgetc(file);
+            if (c == EOF) {
+                printw("Unexpected end of file");
+                fclose(file);
+                return;
+            }
+            map[i][j] = c;
+        }
+        fgetc(file); // Consume newline
+    }
+    
+    fclose(file);
 }

@@ -1,2 +1,1 @@
-fati,Fati1234,f@f.f
-ali,Ali12345,a@g.c
+fati,Fati1234,a@a.a

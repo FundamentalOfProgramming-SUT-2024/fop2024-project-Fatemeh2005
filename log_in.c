@@ -60,10 +60,10 @@ int log_in(player* user) {
         for(int i =0; i<30; i++){
             user->username[i] = name[i];
         }
-        pregame(user); 
-        getch(); 
-        clear();
-        return 1;
+       int k = pregame(user);
+        getch();
+        clear(); 
+        return  k;
     } else {
         printw("Error: Invalid Username or Password!");  
         wrefresh(win);
@@ -215,10 +215,10 @@ int sign_in(player* user) {
        for(int i =0; i<30; i++){
             user->username[i] = name[i];
         } 
-        pregame(user);
+       int k = pregame(user);
         getch();
         clear(); 
-        return 1;
+        return  k;
     }
 
      wrefresh(win); 

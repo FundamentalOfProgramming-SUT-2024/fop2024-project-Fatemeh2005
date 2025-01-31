@@ -447,7 +447,7 @@ int playermove(int y, int x, player* user) {
                 visited[i][j] = 0;  
             }
         }
-        rooms = mapsetup();
+         mapsetup(rooms);
 
          mark_visited_room( rooms[0]);
          print_visited(user,rooms);
