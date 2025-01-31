@@ -121,6 +121,12 @@ loadplayerstruct( user, levelpointer);
             pregame(user);
         getch();
         clear();
+    mapsetup(rooms);
+     mark_visited_room( rooms[0]);
+     print_visited(user, rooms);
+     message_box();
+    
+     playersetup(user,rooms);
         break;
         }
     }
