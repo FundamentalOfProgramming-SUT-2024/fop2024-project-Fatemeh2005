@@ -14,7 +14,10 @@ extern int count_damage;
 int handleinput(int input, player* user, monster** monsters) {
     if(input==' '){
         hit_enemy(user, monsters);
+         print_visited(user, rooms);
         monstermove(rooms, monsters, user);
+        mvprintw(user->position.y, user->position.x, "p");
+       
     }
     
     keypad(stdscr, TRUE);
@@ -344,17 +347,17 @@ int playermove(int y, int x, player* user) {
                    const wchar_t symbol[] = L"\U0001F6E2"; 
                 mvaddnwstr(j, i, symbol, -1);
                 }
-                else if(map [i][j] == 'D'){
+                else if(map [j][i] == 'D'){
                 const wchar_t symbol[] = L"\U0001F5E1"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
                 ///////////normal arrow partab shode
-                else if(map [i][j] == 'N'){
+                else if(map [j][i] == 'N'){
                  const wchar_t symbol[] = L"\U000027B3"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
                 ///////////////magic wand partab shode
-                else if(map [i][j] == 'W'){
+                else if(map [j][i] == 'W'){
                   const wchar_t symbol[] = L"\U00002726"; 
                     mvaddnwstr(i, j, symbol, -1);
                 }
@@ -393,7 +396,7 @@ int playermove(int y, int x, player* user) {
             updateUser("scoreboard.txt", user->username, user);
             getch();
             pregame(user);
-            return;
+            return 0;
         }
     if(level == 4 && rooms[4]->visited == 1 && nogoldremain(rooms[4]) == 1){
         clear();
@@ -402,7 +405,7 @@ int playermove(int y, int x, player* user) {
             updateUser("scoreboard.txt", user->username, user);
             getch();
             pregame(user);
-            return;
+            return 0;
     }
     if(map [y][x] == '#'){
             for(int i = -2; i<3; i++){
@@ -501,23 +504,22 @@ int pathfindingseek(monster* monster, player* user) {
         return 0;
     }
 
-    if (dx > dy) {
-        if (monster->position.x >= user->position.x && map[monster->position.y] [monster->position.x - 1] == '.') {
+        if (monster->position.x > user->position.x && map[monster->position.y] [monster->position.x - 1] == '.') {
            
             monster->position.x--; 
         } else if (monster->position.x <user->position.x && map[monster->position.y] [monster->position.x + 1] == '.') {
            
             monster->position.x++; 
         }
-    } else { 
-        if (monster->position.y >= user->position.y && map[monster->position.y - 1] [monster->position.x] == '.') {
+
+        else if (monster->position.y > user->position.y && map[monster->position.y - 1] [monster->position.x] == '.') {
             
             monster->position.y--; 
         } else if (monster->position.y < user->position.y && map[monster->position.y + 1] [monster->position.x] == '.') {
             
             monster->position.y++; 
         }
-    }
+
      dx = abs(monster->position.x - user->position.x);
      dy = abs(monster->position.y - user->position.y);
      if((dx == 0 && dy == 1)||(dy == 0 && dx == 1)){

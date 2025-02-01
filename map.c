@@ -118,7 +118,7 @@ int drawroom(int k, room* room) {
     map[room->door[2].y][room->door[2].x] = '|';
     }
     if(k == 1){
-        map[room->door[3].y-1][room->door[3].x] = '=';
+        map[room->door[3].y+1][room->door[3].x] = '=';
     }
     ////////////////////////////////////did this for hidden door
     if(k == 6)      {map[room->door[3].y][room->door[3].x] = '|';   map[room->door[0].y][room->door[0].x] = '_';}
@@ -548,6 +548,7 @@ void beneath_box(player * user){
         mvprintw(terminal_height- 5, 4, "Money : %d", user -> money);
         mvprintw(terminal_height- 5, 20, "Health : %d", user ->health);
         mvprintw(terminal_height- 5, 40, "Score : %d", user ->score);
+        mvprintw(terminal_height- 5, 60, "Level : %d", level);
 }
 int nogoldremain(room* room){
     for(int i = room->position.x; i<room->position.x + room->width; i++){

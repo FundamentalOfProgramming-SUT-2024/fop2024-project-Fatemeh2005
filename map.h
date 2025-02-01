@@ -76,6 +76,7 @@ int setting_menu();
 int color_choose_menu();
 int level_choose_menu();
 int pregame(player* user);
+void monstermove(room **rooms, monster **monsters, player* user);
 int pathfindingseek(monster* monsters, player* user);
 int pathsirish(monster* monster, player* user);
 int checkinroom(player* user, room*room);
