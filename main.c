@@ -42,7 +42,6 @@ int main() {
 
     bkgd(COLOR_PAIR(2)); 
     refresh;
-    //int terminal_height, terminal_width;
     preallocs(user);
     pregameprep(user);
     noecho();
