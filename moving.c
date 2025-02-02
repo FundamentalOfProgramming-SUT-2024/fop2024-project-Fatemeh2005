@@ -609,15 +609,15 @@ int pathsirish(monster* monster, player* user){
     return 1;   
 }
 int checkinroom(player*user, room*room){
-    for (int y = room->position.y+1; y < room->position.y + room->height; y++) {
-        for (int x = room->position.x+1; x < room->position.x + room->width; x++) {
+    for (int y = room->position.y; y < room->position.y + room->height+2; y++) {
+        for (int x = room->position.x; x < room->position.x + room->width+2; x++) {
             if(user->position.x ==x && user->position.y==y) return 1;}
     }
     return 0;
 }
 int monsterinroom(monster* monster, room* room){
-    for (int y = room->position.y+1; y < room->position.y + room->height-2; y++) {
-        for (int x = room->position.x+1; x < room->position.x + room->width-2; x++) {
+    for (int y = room->position.y+2; y < room->position.y + room->height-2; y++) {
+        for (int x = room->position.x+2; x < room->position.x + room->width-2; x++) {
             if(monster->position.x ==x && monster->position.y==y) return 1;}
     }
     return 0;    
@@ -630,9 +630,11 @@ void hit_enemy(player* user, monster** monsters){
                 monsters[i]->health -= user->default_weapon->damage;
                 
                 if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
+                
                 else if(monsters[i]->health <= 0){
                     update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
+
                 }
             }
             else if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-1 && monsters[i]->health>0){
@@ -642,6 +644,7 @@ void hit_enemy(player* user, monster** monsters){
                 else if(monsters[i]->health <= 0){
                     update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
+
                 }
             }
             else if( monsters[i]->position.x == user->position.x+1 && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
@@ -651,9 +654,10 @@ void hit_enemy(player* user, monster** monsters){
                 else if(monsters[i]->health <= 0){
                     update_message_box("You killed the enemy!", 0);
                     user->score += (monsters[i]->power*2);
+
                 }
             }
-            else if( monsters[i]->position.x == user->position.x-1 && monsters[i]->position.y == user->position.y+1 && monsters[i]->health>0){
+            else if( monsters[i]->position.x == user->position.x-1 && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                 monsters[i]->health -= user->default_weapon->damage;
                 
                 if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
@@ -662,6 +666,7 @@ void hit_enemy(player* user, monster** monsters){
                     user->score += (monsters[i]->power*2);
                 }
             }
+
         }
     }
     ///////////////////////////////////other weapons that are long range
@@ -782,11 +787,11 @@ void monstermove(room **rooms, monster **monsters, player* user){
 
     for(int i = 0; i < 7; i++){
 if(rooms[i+1]->visited == 1&&!(checkinroom(user, rooms[i+1]) == 0 && monsterinroom(monsters[i], rooms[i+1])==1) && (monsters[i]->name=='S'||monsters[i]->name=='U')&& monsters[i]->health>0){
-      pathsirish(monsters[i], user);
+    pathsirish(monsters[i], user);
     
-    mvprintw(monsters[i]->position.y, monsters[i]->position.x, "%c", monsters[0]->name);    
+    mvprintw(monsters[i]->position.y, monsters[i]->position.x, "%c", monsters[i]->name);    
 }
-else if(checkinroom(user, rooms[i+1])==1&&!(monsters[i]->name=='S'||monsters[i]->name=='U')&& monsters[i]->health>0){
+else if(rooms[i+1]->visited ==1 &&checkinroom(user, rooms[i+1])==1&&!(monsters[i]->name=='S'||monsters[i]->name=='U')&& monsters[i]->health>0){
     pathfindingseek(monsters[i], user);
     mvprintw(monsters[i]->position.y, monsters[i]->position.x, "%c", monsters[i]->name);}    
     }

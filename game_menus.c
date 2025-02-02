@@ -41,6 +41,7 @@ void food_menu(player* user){
                user ->count_perfect_food --;
                user ->health += 4;  if(user ->health > user ->Maxhealth)    user->health = user->Maxhealth;
                user ->unhungry += 2;    if(user->unhungry > 10)     user->unhungry = 10;
+               user->consumed_damage_potion = 1;
                clear();
                mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
             mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);

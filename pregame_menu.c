@@ -20,6 +20,8 @@ extern int ** visited;
 extern int terminal_width;
 extern int terminal_height;
 extern int * levelpointer;
+extern room** rooms;
+extern monster** monsters;
 
 typedef struct {
     char name[MAX_LINE];

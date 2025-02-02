@@ -505,12 +505,18 @@ void update_message_box(const char* message, int i) {
 }
 void beneath_box(player * user){
     // other necessary information will later be added
+
         int terminal_height, terminal_width;
         getmaxyx(stdscr, terminal_height, terminal_width);
+        for(int i = 0; i<200; i++){
+            mvprintw(terminal_height - 5, i, " ");   
+        }
+      
         mvprintw(terminal_height- 5, 4, "Money : %d", user -> money);
         mvprintw(terminal_height- 5, 20, "Health : %d", user ->health);
         mvprintw(terminal_height- 5, 40, "Score : %d", user ->score);
         mvprintw(terminal_height- 5, 60, "Level : %d", level);
+        mvprintw(terminal_height - 5, 80, "Current power of your weapon : %d", user->default_weapon->damage);
 }
 int nogoldremain(room* room){
     for(int i = room->position.x; i<room->position.x + room->width; i++){
