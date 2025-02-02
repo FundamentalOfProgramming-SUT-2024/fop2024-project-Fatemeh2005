@@ -38,7 +38,11 @@ case KEY_UP: case '8':
         while ( map [newy - 1][newx] != ' '&&map [newy - 1][newx] != '_'&&map [newy - 1][newx] != '|'
 &&map [newy - 1][newx] != 'O'&& !(monsters[0]->position.x == newx && monsters[0]->position.y==newy-1)
 && !(monsters[1]->position.x == newx && monsters[1]->position.y==newy-1)
-&& !(monsters[2]->position.x == newx && monsters[2]->position.y==newy-1)) {
+&& !(monsters[2]->position.x == newx && monsters[2]->position.y==newy-1)
+&& !(monsters[3]->position.x == newx && monsters[3]->position.y==newy-1)
+&& !(monsters[4]->position.x == newx && monsters[4]->position.y==newy-1)
+&& !(monsters[5]->position.x == newx && monsters[5]->position.y==newy-1)
+&& !(monsters[6]->position.x == newx && monsters[6]->position.y==newy-1)) {
                     visited[newy-1][newx] = 1;
                     newy--;
                     mvprintw(newy, newx, "%c", map [newy][newx]);
@@ -49,7 +53,11 @@ case KEY_UP: case '8':
                 &&map [newy + 1][newx] != '|'&& map [newy + 1][newx] != 'O'
                 && !(monsters[0]->position.x == newx && monsters[0]->position.y==newy+1)
                 && !(monsters[1]->position.x == newx && monsters[1]->position.y==newy+1)
-                && !(monsters[2]->position.x == newx && monsters[2]->position.y==newy+1)) {
+                && !(monsters[2]->position.x == newx && monsters[2]->position.y==newy+1)
+                && !(monsters[3]->position.x == newx && monsters[3]->position.y==newy+1)
+                && !(monsters[4]->position.x == newx && monsters[4]->position.y==newy+1)
+                && !(monsters[5]->position.x == newx && monsters[5]->position.y==newy+1)
+                && !(monsters[6]->position.x == newx && monsters[6]->position.y==newy+1)) {
                     visited [newy + 1][newx] = 1;
                     newy++;
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
@@ -60,7 +68,11 @@ case KEY_UP: case '8':
                 &&map [newy ][newx-1] != '|'&&map [newy ][newx-1] != 'O'
                 && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy)
                 && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy)
-                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy)) {
+                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy)
+                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy)
+                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy)
+                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy)
+                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy)) {
                     visited [newy][newx-1] = 1;
                     newx--;
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
@@ -71,7 +83,11 @@ case KEY_UP: case '8':
                 &&map [newy ][newx+1] != '|'&&map [newy ][newx+1] != 'O'
                 && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy)
                 && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy)
-                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy)) {
+                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy)
+                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy)
+                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy)
+                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy)
+                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy)) {
                     visited [newy][newx+1]=1;
                     newx++;
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
@@ -82,7 +98,11 @@ case KEY_UP: case '8':
                 &&map [newy-1 ][newx+1] != '|'&&map [newy-1][newx+1] != 'O'
                 && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy-1)
                 && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy-1)
-                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy-1)) {
+                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy-1)
+                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy-1)
+                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy-1)
+                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy-1)
+                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy-1)) {
                     visited [newy-1][newx+1]=1;
                     newx++;
                     newy--;
@@ -94,7 +114,11 @@ case KEY_UP: case '8':
                 &&map [newy+1 ][newx-1] != '|'&&map [newy+1][newx-1] != 'O'
                 && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy+1)
                 && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy+1)
-                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy+1)) {
+                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy+1)
+                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy+1)
+                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy+1)
+                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy+1)
+                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy+1)) {
                     visited [newy+1][newx-1]=1;
                     newx--;
                     newy++;
@@ -106,7 +130,11 @@ case KEY_UP: case '8':
                 &&map [newy-1 ][newx-1] != '|'&&map[newy-1][newx-1] != 'O'
                 && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy-1)
                 && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy-1)
-                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy-1)) {
+                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy-1)
+                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy-1)
+                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy-1)
+                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy-1)
+                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy-1)) {
                     visited [newy-1][newx-1]=1;
                     newx--;
                     newy--;
@@ -118,7 +146,11 @@ case KEY_UP: case '8':
                 &&map [newy+1][newx+1] != '|'&&map [newy+1][newx+1] != 'O'
                 && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy+1)
                 && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy+1)
-                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy+1)) {
+                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy+1)
+                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy+1)
+                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy+1)
+                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy+1)
+                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy+1)) {
                     visited [newy+1][newx+1]=1;
                     newx++;
                     newy++;
@@ -170,7 +202,11 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
     if ((space != ' ' && space != '_' && space != '|' && space != 'O' 
     && !(monsters[0]->position.y==newy && monsters[0]->position.x == newx && monsters[0]->health>0)
     && !(monsters[1]->position.y==newy && monsters[1]->position.x == newx && monsters[1]->health>0)
-    && !(monsters[2]->position.y==newy && monsters[2]->position.x == newx && monsters[2]->health>0))||
+    && !(monsters[2]->position.y==newy && monsters[2]->position.x == newx && monsters[2]->health>0)
+    && !(monsters[3]->position.y==newy && monsters[3]->position.x == newx && monsters[3]->health>0)
+    && !(monsters[4]->position.y==newy && monsters[4]->position.x == newx && monsters[4]->health>0)
+    && !(monsters[5]->position.y==newy && monsters[5]->position.x == newx && monsters[5]->health>0)
+    && !(monsters[6]->position.y==newy && monsters[6]->position.x == newx && monsters[6]->health>0))||
     (newy == rooms[6]->door[3].y && newx == rooms[6]->door[3].x) || (newy == rooms[6]->door[0].y && newx == rooms[6]->door[0].x)) {
         message_box();
           if (space == '$') {
@@ -321,7 +357,7 @@ int playermove(int y, int x, player* user) {
                 }
                 else if(map[j][i] == 'c'){
                      const wchar_t symbol[] = L"\U00002726"; 
-                    mvaddnwstr(i, j, symbol, -1);
+                    mvaddnwstr(j, i, symbol, -1);
                 }
                 else if(map[j][i] == 't'){
                      const wchar_t symbol[] = L"\U000027B3"; 
@@ -392,7 +428,7 @@ int playermove(int y, int x, player* user) {
     ////////////////////////////////////////////////////////bord va bakht
     if(user->health<= 0){
             clear();
-            printw("You Lost!");
+            printw("You Lost! Your score:%d     Your money:%d    ", user->score, user->money);
             updateUser("scoreboard.txt", user->username, user);
             getch();
             pregame(user);
@@ -400,7 +436,7 @@ int playermove(int y, int x, player* user) {
         }
     if(level == 4 && rooms[4]->visited == 1 && nogoldremain(rooms[4]) == 1){
         clear();
-            printw("You Won!");
+            printw("You Won! Your score:%d     Your money:%d    ", user->score, user->money);
             user->score += 40;
             updateUser("scoreboard.txt", user->username, user);
             getch();
@@ -585,7 +621,7 @@ int monsterinroom(monster* monster, room* room){
 void hit_enemy(player* user, monster** monsters){
     //////////////////////////////Sword and Mace
     if(user->default_weapon == weapons[1] || user->default_weapon == weapons[2]){
-        for(int i = 0; i<3; i++){
+        for(int i = 0; i<7; i++){
             if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+1 && monsters[i]->health>0){
                 monsters[i]->health -= user->default_weapon->damage;
                 
@@ -632,7 +668,7 @@ void hit_enemy(player* user, monster** monsters){
         dir = getch();
         switch(dir){
             case KEY_UP:
-                for(int i= 0; i<3; i++){
+                for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
@@ -658,7 +694,7 @@ void hit_enemy(player* user, monster** monsters){
                 }
                 break;
             case KEY_DOWN:
-                for(int i= 0; i<3; i++){
+                for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
@@ -684,7 +720,7 @@ void hit_enemy(player* user, monster** monsters){
                 }
                 break;
             case KEY_RIGHT:
-                for(int i= 0; i<3; i++){
+                for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x+j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
@@ -709,7 +745,7 @@ void hit_enemy(player* user, monster** monsters){
                 }
                 break;
             case KEY_LEFT:
-                for(int i= 0; i<3; i++){
+                for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
                         if( monsters[i]->position.x == user->position.x-j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
@@ -739,24 +775,15 @@ void hit_enemy(player* user, monster** monsters){
     beneath_box(user);
 }
 void monstermove(room **rooms, monster **monsters, player* user){
-        if(rooms[1]->visited == 1 &&!(checkinroom(user, rooms[1]) == 0 && monsterinroom(monsters[0], rooms[1])==1) && (monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){
-      pathsirish(monsters[0], user);
-    
-    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
-     if(rooms[5]->visited == 1&&!(checkinroom(user, rooms[5]) == 0 && monsterinroom(monsters[1], rooms[5])==1) && (monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){
-      pathsirish(monsters[1], user);
-    
-    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
-     if(rooms[7]->visited == 1&&!(checkinroom(user, rooms[7]) == 0 && monsterinroom(monsters[2], rooms[7])==1) && (monsters[2]->name=='S'||monsters[2]->name=='U') && monsters[2]->health>0){
-      pathsirish(monsters[2], user);
-    
-    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
-    else if(checkinroom(user, rooms[1])==1&&!(monsters[0]->name=='S'||monsters[0]->name=='U')&& monsters[0]->health>0){    pathfindingseek(monsters[0], user);
-    mvprintw(monsters[0]->position.y, monsters[0]->position.x, "%c", monsters[0]->name);}
 
-    else if(checkinroom(user, rooms[5])==1&&!(monsters[1]->name=='S'||monsters[1]->name=='U')&& monsters[1]->health>0){    pathfindingseek(monsters[1], user);
-    mvprintw(monsters[1]->position.y, monsters[1]->position.x, "%c", monsters[1]->name);}
-
-    else if(checkinroom(user, rooms[7])==1&&!(monsters[2]->name=='S'||monsters[2]->name=='U')&& monsters[2]->health>0){    pathfindingseek(monsters[2], user);
-    mvprintw(monsters[2]->position.y, monsters[2]->position.x, "%c", monsters[2]->name);}
+    for(int i = 0; i < 7; i++){
+if(rooms[i+1]->visited == 1&&!(checkinroom(user, rooms[i+1]) == 0 && monsterinroom(monsters[i], rooms[i+1])==1) && (monsters[i]->name=='S'||monsters[i]->name=='U')&& monsters[i]->health>0){
+      pathsirish(monsters[i], user);
+    
+    mvprintw(monsters[i]->position.y, monsters[i]->position.x, "%c", monsters[0]->name);    
+}
+else if(checkinroom(user, rooms[i+1])==1&&!(monsters[i]->name=='S'||monsters[i]->name=='U')&& monsters[i]->health>0){
+    pathfindingseek(monsters[i], user);
+    mvprintw(monsters[i]->position.y, monsters[i]->position.x, "%c", monsters[i]->name);}    
+    }
 }

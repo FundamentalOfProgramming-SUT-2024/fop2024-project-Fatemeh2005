@@ -74,7 +74,25 @@ void weopon_menu(player* user){
             mvprintw(14, 10, "press W to change your default weapon to Magic Wand");
             mvprintw(15, 10, "press S to change your default weapon to Sword");
 
-            mvprintw(16, 10, "Your current default weapon is %c", user->default_weapon->name);
+            switch(user->default_weapon->name){
+                case 'M':
+                mvprintw(16, 10, "Your current default weapon is Mace");
+                break;
+                case 'D':
+                mvprintw(16, 10, "Your current default weapon is Dagger");
+                break;
+                case 'N':
+                mvprintw(16, 10, "Your current default weapon is Normal arrow");
+                break;
+                case 'W':
+                mvprintw(16, 10, "Your current default weapon is Magic Wand");
+                break;
+                case 'S':
+                mvprintw(16, 10, "Your current default weapon is Sword");
+                break;
+            }
+
+           // mvprintw(16, 10, "Your current default weapon is %c", user->default_weapon->name);
             char c;
             
             while(1){
@@ -99,7 +117,23 @@ void weopon_menu(player* user){
             else if(c == 'S' && weapons[2]->count>0){
                 user->default_weapon = weapons[2];
             }
-            mvprintw(16, 10, "Your current default weapon is %c", user->default_weapon->name);
+            switch(user->default_weapon->name){
+                case 'M':
+                mvprintw(16, 10, "Your current default weapon is Mace");
+                break;
+                case 'D':
+                mvprintw(16, 10, "Your current default weapon is Dagger");
+                break;
+                case 'N':
+                mvprintw(16, 10, "Your current default weapon is Normal arrow");
+                break;
+                case 'W':
+                mvprintw(16, 10, "Your current default weapon is Magic Wand");
+                break;
+                case 'S':
+                mvprintw(16, 10, "Your current default weapon is Sword");
+                break;
+            }
     }           
 } 
 void potion_menu(player* user){

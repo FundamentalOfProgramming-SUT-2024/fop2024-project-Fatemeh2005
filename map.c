@@ -118,7 +118,7 @@ int drawroom(int k, room* room) {
     map[room->door[2].y][room->door[2].x] = '|';
     }
     if(k == 1){
-        map[room->door[3].y+1][room->door[3].x] = '=';
+        map[room->door[3].y-1][room->door[3].x] = '=';
     }
     ////////////////////////////////////did this for hidden door
     if(k == 6)      {map[room->door[3].y][room->door[3].x] = '|';   map[room->door[0].y][room->door[0].x] = '_';}
@@ -172,62 +172,24 @@ int random_potion = rand() % 3;
         map [room->position.y + random_number ][room->position.x + random_number ] = 'd';
         break;}
     }
-    if(k==1){
-        if(random_weapon==0){
+    if(k!=0 && k!= 8){
+       if(random_weapon==0){
            
-            monsters [0]->name = 'D';   monsters[0]->health = 5;    monsters[0]->power = 1;
+            monsters [k-1]->name = 'D';   monsters[k-1]->health = 5;    monsters[k-1]->power = 1;
         }
         else if(random_weapon==1 ){
                 
-                monsters [0]->name = 'S';   monsters [0]->health= 20;    monsters[0]->power = 3;  
+                monsters [k-1]->name = 'S';   monsters [k-1]->health= 20;    monsters[k-1]->power = 3;  
         }
         else if(random_weapon == 4){
             
-                monsters [0]->name = 'G';    monsters [0]->health= 15;    monsters[0]->power = 2;
+                monsters [k-1]->name = 'G';    monsters [k-1]->health= 15;    monsters[k-1]->power = 2;
         }
         else if(random_weapon==2) {
-       monsters [0]->name = 'U';    monsters [0]->health= 30;    monsters[0]->power = 4;}
+       monsters [k-1]->name = 'U';    monsters [k-1]->health= 30;    monsters[k-1]->power = 4;}
         else if (random_weapon==3) {
-       monsters [0]->name = 'F';    monsters[0]->health = 10;    monsters[0]->power = 2;}
-       monsters[0]->position.x=room->position.x + room->width-2;monsters[0]->position.y=room->position.y + room->height-2;
-    }
-    if(k==5){
-        if(random_weapon==0){
-            
-            monsters [1]->name = 'D';   monsters[1]->health = 5;    monsters[1]->power = 1;
-        }
-        else if(random_weapon==1 ){
-                
-                monsters [1]->name = 'S';   monsters [1]->health= 20;    monsters[1]->power = 3;  
-        }
-        else if(random_weapon==4){
-               
-                monsters [1]->name = 'G';   monsters [1]->health= 15;    monsters[1]->power = 2;
-        }
-        else if(random_weapon==2) {
-       monsters [1]->name = 'U';    monsters [1]->health= 30;    monsters[1]->power = 4;}
-        else if (random_weapon==3) {
-       monsters [1]->name = 'F';    monsters[1]->health = 10;    monsters[1]->power = 2;}
-       monsters[1]->position.x=room->position.x + room->width-2;monsters[1]->position.y=room->position.y + room->height-2;
-    }
-    if(k==7){
-        if(random_weapon==0){
-          
-            monsters [2]->name = 'D';   monsters[2]->health = 5;    monsters[2]->power = 1;
-        }
-        else if(random_weapon==1 ){
-             
-                monsters [2]->name = 'S';   monsters [2]->health= 20;    monsters[2]->power = 3;
-        }
-        else if(random_weapon==4){
-             
-                monsters [2]->name = 'G';   monsters [2]->health= 15;    monsters[2]->power = 2;
-        }
-        else if(random_weapon==2) {
-       monsters [2]->name = 'U';    monsters [2]->health= 30;    monsters[2]->power = 4;}
-        else if (random_weapon==3) {
-       monsters [2]->name = 'F';    monsters[2]->health = 10;    monsters[2]->power = 2;}
-    monsters [2]->position.x=room->position.x + room->width-2;monsters [2]->position.y=room->position.y + room->height-2;
+       monsters [k-1]->name = 'F';    monsters[k-1]->health = 10;    monsters[k-1]->power = 2;}
+       monsters[k-1]->position.x=room->position.x + room->width-2;monsters[k-1]->position.y=room->position.y + room->height-2;
     }
     if(k==4 && level == 4){
         map[room->position.y + 1][room->position.x + room->width-2] = '$';
@@ -509,7 +471,7 @@ i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.
             }    
         }
     }
-    for(int k = 0; k<3; k++){
+    for(int k = 0; k<7; k++){
         if(monsters[k]->health > 0)
          mvprintw(monsters[k]->position.y, monsters[k]->position.x, "%c", monsters[k]->name);
         }
@@ -600,7 +562,7 @@ void savemonsters(monster** monsters, char username[]){
     char filename[60];
     snprintf(filename, sizeof(filename), "%smonsters.txt", username);
     FILE * file = fopen(filename, "w"); 
-    for(int j = 0; j<3; j++){ 
+    for(int j = 0; j<7; j++){ 
 fprintf(file, "%d, %d, %c, %d, %d", monsters[j]->position.x, monsters[j]->position.y, monsters[j]->name, monsters[j]->health, monsters[j]->power);    
 fprintf(file, "\n");
     }
@@ -668,7 +630,7 @@ void loadmonsters(monster** monsters, char username[]) {
         return;
     }
     
-    for (int j = 0; j < 3; j++) {
+    for (int j = 0; j < 7; j++) {
         fscanf(file, "%d, %d, %c, %d, %d", 
                &monsters[j]->position.x, 
                &monsters[j]->position.y, 
@@ -690,7 +652,7 @@ void loadrooms(room** rooms, char username[]) {
         return;
     }
     
-    for (int j = 0; j < 9; j++) {
+    for (int j = 0; j < 7; j++) {
         fscanf(file, "%d, %d, %d, %d, %d,", 
                &rooms[j]->visited, 
                &rooms[j]->position.x, 
