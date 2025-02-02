@@ -5,10 +5,10 @@
 #include <string.h>
 #include "map.h"
 
-#define OPTIONS 4
-#define OPTIONS2 3
+#define OPTIONS 5
+#define OPTIONS2 4
 #define setting_options 3 
-#define color_options 3
+#define color_options 5
 #define level_options 3
 
 #define MAX_LINE 100 
@@ -71,6 +71,11 @@ loadplayerstruct( user, levelpointer);
             refresh();
             getch();  // Placeholder logic for scoreboard
         }
+            else if(selection==4){
+            profile(user);
+            refresh();
+            getch();
+        }
     }
     clear();
     return (selection+1);
@@ -86,7 +91,7 @@ int pregame_menu() {
     box(menu_win, 0, 0);
     keypad(menu_win, TRUE);
 
-    char *choices[OPTIONS] = {"New game", "Resume game", "Scoreboard", "Settings"};
+    char *choices[OPTIONS] = {"New game", "Resume game", "Scoreboard", "Settings", "Profile"};
     int choice = 0;
     int ch;
 
@@ -195,7 +200,7 @@ int color_choose_menu() {
     box(menu_win, 0, 0);
     keypad(menu_win, TRUE);
 
-    char *choices[color_options] = {"White", "Red", "Green"};
+    char *choices[color_options] = {"White", "Red", "Green", "blue", "grey"};
     int choice = 0;
     int ch;
 
@@ -418,6 +423,11 @@ int pregame2(player* user) {
             refresh();
             getch();  // Placeholder logic for scoreboard
         }
+        else if(selection==3){
+            profile(user);
+            refresh();
+            getch();
+        }
     }
     clear();
     return (selection+1);
@@ -433,7 +443,7 @@ int pregame_menu2() {
     box(menu_win, 0, 0);
     keypad(menu_win, TRUE);
 
-    char *choices[OPTIONS2] = {"New game", "Scoreboard", "Settings"};
+    char *choices[OPTIONS2] = {"New game", "Scoreboard", "Settings", "profile"};
     int choice = 0;
     int ch;
 
@@ -462,5 +472,55 @@ int pregame_menu2() {
             default:
                 break;
         }
+    }
+}
+void profile(player* user){
+    clear();
+    FILE *file = fopen("users.txt", "r");
+    if (!file) {
+        perror("Error opening user file");
+        return;
+    }
+
+    char line[MAX_LINE];
+    int user_found = 0;
+    while (fgets(line, sizeof(line), file)) {
+        char username[MAX_LINE], password[MAX_LINE], email[MAX_LINE];
+        
+        if (sscanf(line, "%[^,],%[^,],%s", username, password, email) == 3) {
+            if (strcmp(username, user->username) == 0) {
+                printw("Username: %s\nPassword: %s\nEmail: %s\n", username, password, email);
+                user_found = 1;
+                break;
+            }
+        }
+    }
+    fclose(file);
+    if (!user_found) {
+        printw("User not found.\n");
+    }
+
+    file = fopen("scoreboard.txt", "r");
+    if (!file) {
+        printw("Error opening scoreboard file");
+        return;
+    }
+
+    int score_found = 0;
+    while (fgets(line, sizeof(line), file)) {
+        char username[MAX_LINE];
+        int score, exp, money;
+        
+if (sscanf(line, "%[^,], %d, %d, %d", username, &score, &exp, &money) == 4) {
+            if (strcmp(username, user->username) == 0) {
+                printw("all scores gathered: %d \n number of finished games: %d \n all money that you have gathered: %d\n ",  score, exp, money);
+                score_found = 1;
+                break;
+            }
+        }
+    }
+    fclose(file);
+    if (!score_found) {
+        printw("User not found in scoreboard.\n");
     }
 }

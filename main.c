@@ -129,7 +129,9 @@ void pregameprep(player* user){
 
         if (selection == 0) {
             int enter = sign_in(user);
-            if(enter) {  pregame(user);
+            if(enter) { printw("successfully signed in");
+            getch();
+            pregame2(user);
             break;}
         } else if (selection == 1) {
                 int enter = log_in(user);

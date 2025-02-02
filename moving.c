@@ -16,8 +16,9 @@ int handleinput(int input, player* user, monster** monsters) {
         hit_enemy(user, monsters);
          print_visited(user, rooms);
         monstermove(rooms, monsters, user);
-        mvprintw(user->position.y, user->position.x, "p");
-       
+    attron(COLOR_PAIR(user ->color));
+    mvprintw(user->position.y, user->position.x, "p");
+    attroff(COLOR_PAIR(user ->color));   
     }
     
     keypad(stdscr, TRUE);

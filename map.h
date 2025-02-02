@@ -102,5 +102,6 @@ void loadrooms(room** room, char username[]);
 void loadmonsters(monster** monsters, char username[]);
 void loadplayerstruct(player* user, int*levelpointer); 
 int pregame_menu2();
-int pregame2();
+int pregame2(player* user);
+void profile(player* user);
 #endif

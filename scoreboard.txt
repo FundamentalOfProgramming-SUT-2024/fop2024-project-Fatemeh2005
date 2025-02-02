@@ -2,6 +2,9 @@ gholi, 6, 1, 8
 avin, 0, 2, 0
 sara, 0, 0, 0
 masi, 4, 1, 8
-fati, 108, 18, 28
+fati, 108, 20, 28
 sam, 0, 4, 0
 Gholam, 10, 1, 0
+ahmad, 0, 0, 0
+ghomar, 0, 0, 0
+fahime, 0, 0, 0
