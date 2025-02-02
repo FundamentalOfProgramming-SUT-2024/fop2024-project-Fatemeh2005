@@ -3,3 +3,4 @@ avin,Avin1234,a@a.c
 sara,Sara1234,a@a.a
 masi,Masi1234,a@a.a
 fati,Fati1234,a@a.a
+sam,Sam12345,a@a.a

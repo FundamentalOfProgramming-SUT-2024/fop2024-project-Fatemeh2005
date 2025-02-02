@@ -211,7 +211,7 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
         message_box();
           if (space == '$') {
             user->money += 4;  
-            user->score += 2; 
+            user->score += 8; 
             update_message_box("You earned 4 pieces of gold!", 0);       
             map[newy][newx] = '.'; 
         }
@@ -273,7 +273,7 @@ else if(checkinroom(user, rooms[4]) == 1 ||checkinroom(user, rooms[6]) == 1 ){
         }
         else if(space == 'n'){
             user ->money +=8;
-            user->score += 4;
+            user->score += 16;
             update_message_box("This is black gold! You earned 8 pieces of gold!", 0);
             map [newy] [newx] = '.';
         }
@@ -431,7 +431,9 @@ int playermove(int y, int x, player* user) {
             printw("You Lost! Your score:%d     Your money:%d    ", user->score, user->money);
             updateUser("scoreboard.txt", user->username, user);
             getch();
-            pregame(user);
+        preallocs(user);        
+    pregame(user);
+    maingame(user);
             return 0;
         }
     if(level == 4 && rooms[4]->visited == 1 && nogoldremain(rooms[4]) == 1){
@@ -440,7 +442,9 @@ int playermove(int y, int x, player* user) {
             user->score += 40;
             updateUser("scoreboard.txt", user->username, user);
             getch();
-            pregame(user);
+    preallocs(user);
+    pregameprep(user);
+    maingame(user);
             return 0;
     }
     if(map [y][x] == '#'){

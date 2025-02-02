@@ -2,4 +2,5 @@ gholi, 6, 1, 8
 avin, 0, 2, 0
 sara, 0, 0, 0
 masi, 4, 1, 8
-fati, 84, 3, 24
+fati, 106, 15, 28
+sam, 0, 4, 0

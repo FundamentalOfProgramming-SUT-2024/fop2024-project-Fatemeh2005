@@ -49,6 +49,9 @@ typedef struct monster {
     int power;
 }monster;
 
+void preallocs(player* user);
+void maingame(player* user);
+void pregameprep(player* user);
 int mark_visited_room(room* room);
 int print_visited(player* user,room** rooms);
 void mapsetup(room** rooms);                    
