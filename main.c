@@ -117,6 +117,7 @@ void maingame(player* user){
         handleinput(ch, user,  monsters);
         
     }
+    //pregame(user);
 }
 void pregameprep(player* user){
         while (1) {
@@ -124,51 +125,15 @@ void pregameprep(player* user){
 
         if (selection == 0) {
             int enter = sign_in(user);
-            if(enter ==1){
-     mapsetup(rooms);
-     mark_visited_room( rooms[0]);
-     print_visited(user, rooms);
-     message_box();
-    
-     playersetup(user,rooms);
-                break;
-            } 
-             
-            
-        } else if (selection == 1) {
-            int enter =log_in(user);   
-            if(enter==1){
-     mapsetup(rooms);
-     mark_visited_room( rooms[0]);
-     print_visited(user, rooms);
-     message_box();
-    
-     playersetup(user,rooms);
-                break;
-            }
-            if(enter == 2)
- {      playersetup(user, rooms);
-    loadmap( map,  user->username,  terminal_width,  terminal_height);
-
-loadrooms( rooms, user->username);
-loadmonsters( monsters, user->username);
-loadplayerstruct( user, levelpointer);
- loadvisited( visited, user->username,  terminal_width,  terminal_height);
-      print_visited(user, rooms);
-          message_box();
+            if(enter)   pregame(user);
             break;
-            }
+        } else if (selection == 1) {
+                int enter = log_in(user);
+                if (enter)  pregame(user);
+                break;
         }
         else if(selection == 2){
-            pregame(user);
-        getch();
-        clear();
-     mapsetup(rooms);
-     mark_visited_room( rooms[0]);
-     print_visited(user, rooms);
-     message_box();
-    
-     playersetup(user,rooms);
+        pregame(user);
         break;
         }
     }

@@ -6,6 +6,7 @@
 #include "map.h"
 
 #define OPTIONS 4
+#define OPTIONS2 3
 #define setting_options 3 
 #define color_options 3
 #define level_options 3
@@ -18,6 +19,7 @@ extern int level;
 extern int ** visited;
 extern int terminal_width;
 extern int terminal_height;
+extern int * levelpointer;
 
 typedef struct {
     char name[MAX_LINE];
@@ -38,6 +40,12 @@ int pregame(player* user) {
             mvprintw(0, 0, "Starting new game...");
             refresh();
             getch();  // Placeholder logic for starting the game
+     mapsetup(rooms);
+     mark_visited_room( rooms[0]);
+     print_visited(user, rooms);
+     message_box();
+    
+     playersetup(user,rooms);
             break;
         } else if (selection == 1) {  // "Resume game"
             // Resume the game logic
@@ -45,6 +53,15 @@ int pregame(player* user) {
             refresh();
 
             getch();  // Placeholder logic for resuming the game
+                 playersetup(user, rooms);
+    loadmap( map,  user->username,  terminal_width,  terminal_height);
+
+loadrooms( rooms, user->username);
+loadmonsters( monsters, user->username);
+loadplayerstruct( user, levelpointer);
+ loadvisited( visited, user->username,  terminal_width,  terminal_height);
+      print_visited(user, rooms);
+          message_box();
             break;
         } else if (selection == 2) {  // "Scoreboard"
             mvprintw(0, 0, "Displaying scoreboard...");
@@ -53,6 +70,7 @@ int pregame(player* user) {
             getch();  // Placeholder logic for scoreboard
         }
     }
+    clear();
     return (selection+1);
 }
 
@@ -372,4 +390,75 @@ void printScoreboard(const char *filename, player* user) {
 }
 int addingflash(char user[], char users[]) {
     return strcmp(user, users) == 0 ? 1 : 0;  // 1 if match, 0 otherwise
+}
+int pregame2(player* user) {
+    int selection;
+    while (1) {
+         selection = pregame_menu2();
+
+        if (selection == 2) {  // "Settings" option
+            setting(user); 
+        } else if (selection == 0) {  // "New game"
+            // Start the new game here
+            mvprintw(0, 0, "Starting new game...");
+            refresh();
+            getch();  // Placeholder logic for starting the game
+     mapsetup(rooms);
+     mark_visited_room( rooms[0]);
+     print_visited(user, rooms);
+     message_box();
+    
+     playersetup(user,rooms);
+            break;
+        }  else if (selection == 1) {  // "Scoreboard"
+            mvprintw(0, 0, "Displaying scoreboard...");
+            printScoreboard("scoreboard.txt", user);
+            refresh();
+            getch();  // Placeholder logic for scoreboard
+        }
+    }
+    clear();
+    return (selection+1);
+}
+
+int pregame_menu2() {
+    cbreak();
+    noecho();
+    curs_set(0);
+
+    int height = 7, width = 30, start_y = 8, start_x = 15;
+    WINDOW *menu_win = newwin(height, width, start_y, start_x);
+    box(menu_win, 0, 0);
+    keypad(menu_win, TRUE);
+
+    char *choices[OPTIONS2] = {"New game", "Scoreboard", "Settings"};
+    int choice = 0;
+    int ch;
+
+    while (1) {
+        for (int i = 0; i < OPTIONS2; i++) {
+            if (i == choice) {
+                wattron(menu_win, A_REVERSE);
+            }
+            mvwprintw(menu_win, i + 1, 2, "%s", choices[i]);
+            wattroff(menu_win, A_REVERSE);
+        }
+
+        wrefresh(menu_win);
+        ch = wgetch(menu_win);
+
+        switch (ch) {
+            case KEY_UP:
+                choice = (choice - 1 + OPTIONS2) % OPTIONS2;
+                break;
+            case KEY_DOWN:
+                choice = (choice + 1) % OPTIONS2;
+                break;
+            case '\n':
+                delwin(menu_win);
+                return choice;
+            default:
+                break;
+        }
+    }
 }

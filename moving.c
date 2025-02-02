@@ -431,8 +431,8 @@ int playermove(int y, int x, player* user) {
             printw("You Lost! Your score:%d     Your money:%d    ", user->score, user->money);
             updateUser("scoreboard.txt", user->username, user);
             getch();
-        preallocs(user);        
-    pregame(user);
+    preallocs(user);        
+    pregame2(user);
     maingame(user);
             return 0;
         }
@@ -443,7 +443,7 @@ int playermove(int y, int x, player* user) {
             updateUser("scoreboard.txt", user->username, user);
             getch();
     preallocs(user);
-    pregameprep(user);
+    pregame2(user);
     maingame(user);
             return 0;
     }
