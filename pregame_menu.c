@@ -3,11 +3,12 @@
 #include <wchar.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "map.h"
 
 #define OPTIONS 5
 #define OPTIONS2 4
-#define setting_options 3 
+#define setting_options 5 
 #define color_options 5
 #define level_options 3
 
@@ -23,12 +24,33 @@ extern int * levelpointer;
 extern room** rooms;
 extern monster** monsters;
 
+#define MAX_SONGS 5
+char *song_list[MAX_SONGS] = {
+    "./Dua1.mp3", 
+    "./Dua2.mp3", 
+    "./Dua3.mp3", 
+    "./cool1.mp3", 
+    "./cool2.mp3"
+};
+
 typedef struct {
     char name[MAX_LINE];
     int score;
     int experience;
     int allmoney;
 } User;
+
+void play_music(int play, const char *song) {
+    if (play) {
+        // Replace with actual code to play the song
+        char command[256];
+        snprintf(command, sizeof(command), "mpg123 -q %s > /dev/null 2>&1 &", song);  // -q for quiet mode, output to /dev/null
+        system(command);
+    } else {
+        // Replace with actual code to stop the song
+        system("pkill mpg123");
+    }
+}
 
 int pregame(player* user) {
     int selection;
@@ -123,72 +145,7 @@ int pregame_menu() {
     }
 }
 
-int setting(player *user) {
-    while (1) {
-        int selection = setting_menu();
 
-        if (selection == 0) {  // Difficulty level
-            int level = level_choose_menu();
-            user->health = 30 - (level * 5);
-            user->Maxhealth = 30 - (level * 5);
-            mvprintw(0, 0, "Difficulty level selected: %d", level + 1);  // Display level (1-based index)
-            refresh();
-            getch();  // Wait for user to acknowledge
-        } else if (selection == 1) {  // Player color
-            int color_selection = color_choose_menu();
-            user->color = color_selection + 2;  
-            mvprintw(0, 0, "Color set to %d", user->color);
-            refresh();
-            getch();  
-        } else if (selection == 2) {  // Return to pregame menu
-            break;  // Exit the settings menu
-        }
-    }
-    refresh();
-    return 1;
-}
-
-int setting_menu() {
-    cbreak();
-    noecho();
-    curs_set(0);
-
-    int height = 8, width = 30, start_y = 8, start_x = 15;
-    WINDOW *menu_win = newwin(height, width, start_y, start_x);
-    box(menu_win, 0, 0);
-    keypad(menu_win, TRUE);
-
-    char *choices[setting_options] = {"Difficulty level", "Player color", "Return to previous menu"};
-    int choice = 0;
-    int ch;
-
-    while (1) {
-        for (int i = 0; i < setting_options; i++) {
-            if (i == choice) {
-                wattron(menu_win, A_REVERSE);
-            }
-            mvwprintw(menu_win, i + 1, 2, "%s", choices[i]);
-            wattroff(menu_win, A_REVERSE);
-        }
-
-        wrefresh(menu_win);
-        ch = wgetch(menu_win);
-
-        switch (ch) {
-            case KEY_UP:
-                choice = (choice - 1 + setting_options) % setting_options;
-                break;
-            case KEY_DOWN:
-                choice = (choice + 1) % setting_options;
-                break;
-            case '\n':
-                delwin(menu_win);
-                return choice;
-            default:
-                break;
-        }
-    }
-}
 
 int color_choose_menu() {
     cbreak();
@@ -521,4 +478,135 @@ if (sscanf(line, "%[^,], %d, %d, %d", username, &score, &exp, &money) == 4) {
     }
     fclose(file);
 
+}
+int setting_menu(int music_on, int current_song_index) {
+    cbreak();
+    noecho();
+    curs_set(0);
+
+    int height = 12, width = 30, start_y = 8, start_x = 15;
+    WINDOW *menu_win = newwin(height, width, start_y, start_x);
+    box(menu_win, 0, 0);
+    keypad(menu_win, TRUE);
+
+    char *choices[setting_options] = {
+        "Difficulty level", 
+        "Player color", 
+        music_on ? "Music: On" : "Music: Off", 
+        "Change Song", 
+        "Return to previous menu"
+    };
+
+    int choice = 0;
+    int ch;
+
+    while (1) {
+        // Display the menu options
+        for (int i = 0; i < setting_options; i++) {
+            if (i == choice) {
+                wattron(menu_win, A_REVERSE);
+            }
+            mvwprintw(menu_win, i + 1, 2, "%s", choices[i]);
+            wattroff(menu_win, A_REVERSE);
+        }
+
+        wrefresh(menu_win);
+        ch = wgetch(menu_win);
+
+        switch (ch) {
+            case KEY_UP:
+                choice = (choice - 1 + setting_options) % setting_options;
+                break;
+            case KEY_DOWN:
+                choice = (choice + 1) % setting_options;
+                break;
+            case '\n':
+                delwin(menu_win);
+                return choice;
+            default:
+                break;
+        }
+    }
+}
+
+// Function to display settings and allow user interaction
+int setting(player *user) {
+    static int music_on = 0;           // Static variable to persist music state across settings
+    static int current_song_index = 0; // Static variable to store the current song index
+
+    while (1) {
+        int selection = setting_menu(music_on, current_song_index);
+
+        if (selection == 0) {  // Difficulty level
+            int level = level_choose_menu();
+            user->health = 30 - (level * 5);
+            user->Maxhealth = 30 - (level * 5);
+            mvprintw(0, 0, "Difficulty level selected: %d", level + 1);  // Display level (1-based index)
+            refresh();
+            getch();  // Wait for user to acknowledge
+        } else if (selection == 1) {  // Player color
+            int color_selection = color_choose_menu();
+            user->color = color_selection + 2;  
+            mvprintw(0, 0, "Color set to %d", user->color);
+            refresh();
+            getch();  
+        } else if (selection == 2) {  // Music Toggle
+            music_on = !music_on;  // Toggle music state
+            if (music_on) {
+                play_music(1, song_list[current_song_index]);  // Play the current song
+            } else {
+                play_music(0, NULL);  // Stop music
+            }
+            mvprintw(0, 0, music_on ? "Music is now ON" : "Music is now OFF");
+            refresh();
+            getch();  // Wait for user to acknowledge
+        } else if (selection == 3) {  // Change Song
+    // Show song list and let user choose a new song
+    int new_song = -1;
+
+    // Show song list in a new window
+    WINDOW *song_win = newwin(7, 30, 12, 15);
+    box(song_win, 0, 0);
+    mvwprintw(song_win, 0, 2, "Select Song:");
+    wrefresh(song_win);
+
+    for (int i = 0; i < MAX_SONGS; i++) {
+        mvwprintw(song_win, i + 1, 2, "%d. %s", i + 1, song_list[i]);
+    }
+    wrefresh(song_win);
+
+    // Wait for valid input
+    while (new_song == -1) {
+        int song_ch = wgetch(song_win);
+
+        // Ensure the user inputs a valid song number
+        if (song_ch >= '1' && song_ch <= '5') {
+            new_song = song_ch - '1';  // Convert char input to song index
+        } else {
+            mvwprintw(song_win, MAX_SONGS + 1, 2, "Invalid choice! Please select a valid song.");
+            wrefresh(song_win);
+        }
+    }
+
+    // Update the current song index
+    current_song_index = new_song;
+
+    delwin(song_win);  // Close the song list window
+
+    // If music is on, stop it and restart with the new song
+    if (music_on) {
+        play_music(0, NULL);  // Stop the current song
+        play_music(1, song_list[current_song_index]);  // Play the new song
+    }
+
+    mvprintw(0, 0, "Now playing: %s", song_list[current_song_index]);
+    refresh();
+    getch();  // Wait for user to acknowledge
+}
+ else if (selection == 4) {  // Return to pregame menu
+            break;  // Exit the settings menu
+        }
+    }
+    refresh();
+    return 1;
 }
