@@ -11,11 +11,13 @@ void food_menu(player* user){
     
             mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
             mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
-            mvprintw(3, 0,"%d", user->unhungry);
+            mvprintw(2, 0,"number of your speed food units is :  %d", user ->count_speed_food);            
+           // mvprintw(3, 0,"%d", user->unhungry);
             mvprintw(10, 10, "press c to consume normal food");
             mvprintw(11, 10, "press p to consume power food");
-            mvprintw(12, 10, "press Q to exit this menu");
-            mvprintw(2, 0, "how hungry you are: ");
+            mvprintw(12, 10, "press s to consume speed food");
+            mvprintw(13, 10, "press Q to exit this menu");
+            mvprintw(3, 0, "how hungry you are: ");
             for(int i = 0; i< 10 -user ->unhungry; i++)
             printw(" ! ");
             char c;
@@ -27,15 +29,17 @@ void food_menu(player* user){
                user ->health += 4;  if(user ->health > user ->Maxhealth)    user->health = user->Maxhealth;
                user ->unhungry += 2;    if(user->unhungry > 10)     user->unhungry = 10;
                clear();
-               mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
+            mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
             mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
-         //   mvprintw(3, 0,"%d", user->unhungry);
+            mvprintw(2, 0,"number of your speed food units is :  %d", user ->count_speed_food);            
+           // mvprintw(3, 0,"%d", user->unhungry);
             mvprintw(10, 10, "press c to consume normal food");
             mvprintw(11, 10, "press p to consume power food");
-            mvprintw(12, 10, "press Q to exit this menu");
-            mvprintw(2, 0, "how hungry you are: ");
-            for(int i = 0; i<10 -user ->unhungry; i++)
-            printw(" ! ");       
+            mvprintw(12, 10, "press s to consume speed food");
+            mvprintw(13, 10, "press Q to exit this menu");
+            mvprintw(3, 0, "how hungry you are: ");
+            for(int i = 0; i< 10 -user ->unhungry; i++)
+            printw(" ! ");      
     }  
     else if(c == 'p' && user ->count_perfect_food > 0){
                user ->count_perfect_food --;
@@ -43,16 +47,36 @@ void food_menu(player* user){
                user ->unhungry += 2;    if(user->unhungry > 10)     user->unhungry = 10;
                user->consumed_damage_potion = 1;
                clear();
-               mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
+            mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
             mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
+            mvprintw(2, 0,"number of your speed food units is :  %d", user ->count_speed_food);            
            // mvprintw(3, 0,"%d", user->unhungry);
             mvprintw(10, 10, "press c to consume normal food");
             mvprintw(11, 10, "press p to consume power food");
-            mvprintw(12, 10, "press Q to exit this menu");
-            mvprintw(2, 0, "how hungry you are: ");
-            for(int i = 0; i<10 -user ->unhungry; i++)
+            mvprintw(12, 10, "press s to consume speed food");
+            mvprintw(13, 10, "press Q to exit this menu");
+            mvprintw(3, 0, "how hungry you are: ");
+            for(int i = 0; i< 10 -user ->unhungry; i++)
+            printw(" ! ");   
+    }
+    else if(c == 's' && user ->count_speed_food > 0){
+               user ->count_speed_food --;
+               user ->health += 4;  if(user ->health > user ->Maxhealth)    user->health = user->Maxhealth;
+               user ->unhungry += 2;    if(user->unhungry > 10)     user->unhungry = 10;
+               user->consumed_speed_potion = 1;
+               clear();
+            mvprintw(0, 0,"number of your normal food units is :  %d", user ->count_food);
+            mvprintw(1, 0,"number of your power food units is :  %d", user ->count_perfect_food);
+            mvprintw(2, 0,"number of your speed food units is :  %d", user ->count_speed_food);            
+           // mvprintw(3, 0,"%d", user->unhungry);
+            mvprintw(10, 10, "press c to consume normal food");
+            mvprintw(11, 10, "press p to consume power food");
+            mvprintw(12, 10, "press s to consume speed food");
+            mvprintw(13, 10, "press Q to exit this menu");
+            mvprintw(3, 0, "how hungry you are: ");
+            for(int i = 0; i< 10 -user ->unhungry; i++)
             printw(" ! ");    
-    }          
+    }           
             else if(c == 'Q'){
                 clear();
                 break;
@@ -145,9 +169,10 @@ void potion_menu(player* user){
             mvprintw(1, 0,"number of your Speed potion is :  %d", user ->speed_potion);
             mvprintw(2, 0,"number of your Damage potion is :  %d", user ->damage_potion);
             
-            mvprintw(10, 10, "press Q to exit this menu");
+            mvprintw(14, 10, "press Q to exit this menu");
             mvprintw(11, 10, "press H to consume Health potion");
             mvprintw(12, 10, "press D to consume Damage potion");
+            mvprintw(13, 10, "press S to consume Speed potion");
             char c;
             
             while(1){
@@ -165,6 +190,12 @@ void potion_menu(player* user){
             else if(c == 'D' && user->damage_potion>0){
                 user->damage_potion --;
                 user->consumed_damage_potion = 1;
+                mvprintw(2, 0,"number of your Damage potion is :  %d", user ->damage_potion);
+            }
+                else if(c == 'S' && user->speed_potion>0){
+                user->speed_potion --;
+                user->consumed_speed_potion = 1;
+            mvprintw(1, 0,"number of your Speed potion is :  %d", user ->speed_potion);
             }
     }           
 }

@@ -18,10 +18,12 @@ weapon** weapons;
 int terminal_width;
 int terminal_height;
 int count_damage;
+int count_speed;
 int * levelpointer;
 //player* user;
 int main() {
     count_damage = 0;
+    count_speed = 0;
     player* user = malloc(sizeof(player));
 
     initscr();
@@ -64,6 +66,7 @@ void playersetup(player* user,room** rooms) {
     user->position.y = rooms[0]->position.y + 1;
     user ->count_food = 0;
     user ->count_perfect_food = 0;
+    user ->count_speed_food = 0;
     user ->unhungry = 10;
     user -> money = 0;
     user ->health_potion = 0;

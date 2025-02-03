@@ -345,11 +345,18 @@ i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.
     
 }
 else if(map [i][j] == 'f' && ((i >= rooms[3]->position.y && j >= rooms[3]->position.x&&
-i < rooms[3]->height+rooms[3]->position.y&&j<rooms[3]->width+rooms[3]->position.x) || (i >= rooms[7]->position.y && j >= rooms[7]->position.x&&
-i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.x))){
+i < rooms[3]->height+rooms[3]->position.y&&j<rooms[3]->width+rooms[3]->position.x) || (i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
+i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.x))){
     attron(COLOR_PAIR(5));
     mvprintw(i, j, "%c", map[i][j]);
     attroff(COLOR_PAIR(5));
+}
+else if(map [i][j] == 'f' && ((i >= rooms[7]->position.y && j >= rooms[7]->position.x&&
+i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.x) || (i >= rooms[8]->position.y && j >= rooms[8]->position.x&&
+i < rooms[8]->height+rooms[8]->position.y&&j<rooms[8]->width+rooms[8]->position.x))){
+    attron(COLOR_PAIR(4));
+    mvprintw(i, j, "%c", map[i][j]);
+    attroff(COLOR_PAIR(4));
 }
            else     mvprintw(i, j, "%c", map[i][j]);
                 }
@@ -459,11 +466,18 @@ i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.
     
 }
 else if(map [i][j] == 'f' && ((i >= rooms[3]->position.y && j >= rooms[3]->position.x&&
-i < rooms[3]->height+rooms[3]->position.y&&j<rooms[3]->width+rooms[3]->position.x) || (i >= rooms[7]->position.y && j >= rooms[7]->position.x&&
-i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.x))){
+i < rooms[3]->height+rooms[3]->position.y&&j<rooms[3]->width+rooms[3]->position.x) || (i >= rooms[4]->position.y && j >= rooms[4]->position.x&&
+i < rooms[4]->height+rooms[4]->position.y&&j<rooms[4]->width+rooms[4]->position.x))){
     attron(COLOR_PAIR(5));
     mvprintw(i, j, "%c", map[i][j]);
     attroff(COLOR_PAIR(5));
+}
+else if(map [i][j] == 'f' && ((i >= rooms[7]->position.y && j >= rooms[7]->position.x&&
+i < rooms[7]->height+rooms[7]->position.y&&j<rooms[7]->width+rooms[7]->position.x) || (i >= rooms[8]->position.y && j >= rooms[8]->position.x&&
+i < rooms[8]->height+rooms[8]->position.y&&j<rooms[8]->width+rooms[8]->position.x))){
+    attron(COLOR_PAIR(4));
+    mvprintw(i, j, "%c", map[i][j]);
+    attroff(COLOR_PAIR(4));
 }
            else     mvprintw(i, j, "%c", map[i][j]);
                 }
@@ -578,7 +592,7 @@ void saveplayerstruct(player* user, int level){
 char filename[256];
     snprintf(filename, sizeof(filename), "%splayerstruct.txt", user->username);
     FILE * file = fopen(filename, "w"); 
-    fprintf(file,"%d,  %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d",level,
+    fprintf(file,"%d,  %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d, %d",level,
     user-> Maxhealth,
     user->color,
     user->position.x,
@@ -589,11 +603,13 @@ char filename[256];
     user->count_move3,
     user->count_food,
     user->count_perfect_food,
+    user->count_speed_food,    
     user->unhungry,
     user->money,
     user -> default_weapon->name,
     user->health_potion,user-> speed_potion,user-> damage_potion,
     user->consumed_damage_potion,
+    user->consumed_speed_potion,
     user->score); 
     fclose(file);       
 }
@@ -685,7 +701,7 @@ void loadplayerstruct(player* user, int* level) {
         return;
     }
     
-    fscanf(file, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d, %d",
+    fscanf(file, "%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %c, %d, %d, %d, %d,%d, %d",
            level, 
            &user->Maxhealth,
            &user->color,
@@ -697,6 +713,7 @@ void loadplayerstruct(player* user, int* level) {
            &user->count_move3,
            &user->count_food,
            &user->count_perfect_food,
+           &user->count_speed_food,
            &user->unhungry,
            &user->money,
            &user->default_weapon->name,
@@ -704,6 +721,7 @@ void loadplayerstruct(player* user, int* level) {
            &user->speed_potion,
            &user->damage_potion,
            &user->consumed_damage_potion,
+           &user->consumed_speed_potion,
            &user->score);
     
     fclose(file);

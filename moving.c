@@ -10,6 +10,7 @@ extern room** rooms;
 extern monster** monsters;
 extern weapon** weapons;
 extern int count_damage;
+extern int count_speed;
 
 int handleinput(int input, player* user, monster** monsters) {
     if(input==' '){
@@ -175,15 +176,41 @@ case KEY_UP: case '8':
     }
     int newx = user->position.x, newy = user->position.y;
     switch (input) {
-        case KEY_UP: case '8': newy -= 1; break;
-        case KEY_DOWN: case '2': newy += 1; break;
-        case KEY_LEFT: case '4': newx -= 1; break;
-        case KEY_RIGHT: case '6': newx += 1; break;
-        case KEY_HOME: case '7': newy -= 1; newx -= 1; break;
-        case KEY_PPAGE: case '9': newy -= 1; newx += 1; break;
-        case KEY_END: case '1': newy += 1; newx -= 1; break;
-        case KEY_NPAGE: case '3': newy += 1; newx += 1; break;
+
+        case KEY_UP: case '8':
+        if(user->consumed_speed_potion==0){ newy -= 1; break;}
+        else if(user->consumed_speed_potion==1)
+        {newy -= 2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_DOWN: case '2':
+        if(user->consumed_speed_potion==0){ newy += 1; break;}
+        else if(user->consumed_speed_potion==1)
+        {newy += 2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_LEFT: case '4':
+        if(user->consumed_speed_potion==0){ newx -= 1; break;}
+        else if(user->consumed_speed_potion==1)
+        {newx -= 2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_RIGHT: case '6':
+        if(user->consumed_speed_potion==0){ newx += 1; break;}
+        else if(user->consumed_speed_potion==1)
+        {newx += 2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_HOME: case '7':
+        if(user->consumed_speed_potion==0){ newy -= 1; newx--; break;}
+        else if(user->consumed_speed_potion==1)
+        {newy -= 2; newx-=2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_PPAGE: case '9':
+        if(user->consumed_speed_potion==0){ newy --; newx++; break;}
+        else if(user->consumed_speed_potion==1)
+        {newy -= 2; newx+=2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_END: case '1':
+        if(user->consumed_speed_potion==0){ newy ++; newx--; break;}
+        else if(user->consumed_speed_potion==1)
+        {newy += 2; newx-=2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
+        case KEY_NPAGE: case '3':
+        if(user->consumed_speed_potion==0){ newy ++; newx++; break;}
+        else if(user->consumed_speed_potion==1)
+        {newy += 2; newx+=2; count_speed++; if(count_speed>10){count_speed=0 ; user->consumed_speed_potion=0;} break;}
         default: return 0;
+
     }
      if(pressed_g){
         pressed_g = 0;
@@ -219,25 +246,30 @@ int checkposition(int newy, int newx, player* user, monster** monsters) {
         //////////////////////////////////////////different food types
         else if (space == 'f') {
             //normal  food in rooms 0, 1, 2, 5, 8
-if(checkinroom(user, rooms[0]) == 1 ||checkinroom(user, rooms[1]) == 1 ||checkinroom(user, rooms[2]) == 1 ||checkinroom(user, rooms[5]) == 1 ||checkinroom(user, rooms[8]) == 1 ){
-            if(user ->count_food + user->count_perfect_food<5 ){
+if(checkinroom(user, rooms[0]) == 1 ||checkinroom(user, rooms[1]) == 1 ||checkinroom(user, rooms[2]) == 1 ){
+            if(user ->count_food + user->count_perfect_food+user->count_speed_food<5 ){
             update_message_box("You found some food!", 0); 
             user ->count_food ++;  
             map[newy][newx] = '.';  }
         }
-        //power food in rooms 3, 7
-else if(checkinroom(user, rooms[3]) == 1 ||checkinroom(user, rooms[7]) == 1 ){
-        if(user ->count_food + user->count_perfect_food < 5){
+else if(checkinroom(user, rooms[3]) == 1 ||checkinroom(user, rooms[4]) == 1 ){
+            if(user ->count_food + user->count_perfect_food+user->count_speed_food<5 ){
             update_message_box("You found some power food! It can also increase your power temporarily", 0); 
             user ->count_perfect_food ++;
              
             map[newy][newx] = '.';  }
         }
-else if(checkinroom(user, rooms[4]) == 1 ||checkinroom(user, rooms[6]) == 1 ){
+else if(checkinroom(user, rooms[5]) == 1 ||checkinroom(user, rooms[6]) == 1 ){
         
             update_message_box("Haha it was rotten food!", 0); 
             user ->health -= 2;  
             map[newy][newx] = '.';  
+        }
+else if(checkinroom(user, rooms[7]) == 1 ||checkinroom(user, rooms[8]) == 1 ){
+                if(user ->count_food + user->count_perfect_food+user->count_speed_food<5 ) {       
+            update_message_box("You found some speed food! It can also increase your speed temporarily", 0); 
+            user->count_speed_food++;  
+            map[newy][newx] = '.'; } 
         }
         }
         else if(space == 'M'){

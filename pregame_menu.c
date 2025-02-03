@@ -520,7 +520,5 @@ if (sscanf(line, "%[^,], %d, %d, %d", username, &score, &exp, &money) == 4) {
         }
     }
     fclose(file);
-    if (!score_found) {
-        printw("User not found in scoreboard.\n");
-    }
+
 }
