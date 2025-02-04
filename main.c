@@ -148,8 +148,8 @@ void pregameprep(player* user){
 }
 void preallocs(player* user){
 
-    user ->health = 30;
-    user->Maxhealth = 30;
+    user ->health = 40;
+    user->Maxhealth = 40;
     
     level = 1;
     levelpointer = & level;
@@ -182,6 +182,6 @@ void preallocs(player* user){
     weapons[0]->name = 'D';     weapons[0]->count = 0;      weapons[0]->damage = 12;      weapons[0]->range = 5;     
     weapons[1]->name = 'M';     weapons[1]->count = 1;      weapons[1]->damage = 5;      weapons[1]->range = 1;
     weapons[2]->name = 'S';     weapons[2]->count = 0;      weapons[2]->damage = 10;      weapons[2]->range = 1;
-    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;      weapons[3]->range = 10;
-    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;      weapons[4]->range = 5;
+    weapons[3]->name = 'W';     weapons[3]->count = 0;      weapons[3]->damage = 15;      weapons[3]->range = 12;
+    weapons[4]->name = 'N';     weapons[4]->count = 0;      weapons[4]->damage = 5;      weapons[4]->range = 8;
 }

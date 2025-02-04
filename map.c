@@ -65,14 +65,14 @@ void createroom(room* newroom, int i,int y, int x, int height, int width) {
     newroom->width = width;
     newroom->visited = 0;
 
-    newroom->door[0].x = x + rand() % (width - 2) + 1;
+    newroom->door[0].x = x  + rand() % (width - 4) + 2;
     newroom->door[0].y = y;
-    newroom->door[1].x = x + rand() % (width - 2) + 1;
+    newroom->door[1].x = x  + rand() % (width - 4) + 2;
     newroom->door[1].y = y + height - 1;
     newroom->door[2].x = x;
-    newroom->door[2].y = y + rand() % (height - 2) + 1;
+    newroom->door[2].y = y + rand() % (height - 4) + 2;
     newroom->door[3].x = x + width - 1;
-    newroom->door[3].y = y + rand() % (height - 2) + 1;
+    newroom->door[3].y = y + rand() % (height - 4) + 2;
     
     drawroom(i, newroom);
     
@@ -118,7 +118,7 @@ int drawroom(int k, room* room) {
     map[room->door[2].y][room->door[2].x] = '|';
     }
     if(k == 1){
-        map[room->door[3].y-1][room->door[3].x] = '=';
+        map[room->position.y+1][room->position.x +room->width-1] = '=';
     }
     ////////////////////////////////////did this for hidden door
     if(k == 6)      {map[room->door[3].y][room->door[3].x] = '|';   map[room->door[0].y][room->door[0].x] = '_';}

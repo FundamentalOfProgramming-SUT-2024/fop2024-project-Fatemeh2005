@@ -15,7 +15,7 @@ extern int count_speed;
 int handleinput(int input, player* user, monster** monsters) {
     if(input==' '){
         hit_enemy(user, monsters);
-         print_visited(user, rooms);
+        print_visited(user, rooms);
         monstermove(rooms, monsters, user);
     attron(COLOR_PAIR(user ->color));
     mvprintw(user->position.y, user->position.x, "p");
@@ -38,13 +38,13 @@ int handleinput(int input, player* user, monster** monsters) {
 switch (input) {
 case KEY_UP: case '8':
         while ( map [newy - 1][newx] != ' '&&map [newy - 1][newx] != '_'&&map [newy - 1][newx] != '|'
-&&map [newy - 1][newx] != 'O'&& !(monsters[0]->position.x == newx && monsters[0]->position.y==newy-1)
-&& !(monsters[1]->position.x == newx && monsters[1]->position.y==newy-1)
-&& !(monsters[2]->position.x == newx && monsters[2]->position.y==newy-1)
-&& !(monsters[3]->position.x == newx && monsters[3]->position.y==newy-1)
-&& !(monsters[4]->position.x == newx && monsters[4]->position.y==newy-1)
-&& !(monsters[5]->position.x == newx && monsters[5]->position.y==newy-1)
-&& !(monsters[6]->position.x == newx && monsters[6]->position.y==newy-1)) {
+&&map [newy - 1][newx] != 'O'&& !(monsters[0]->position.x == newx && monsters[0]->position.y==newy-1 && monsters[0]->health>0)
+&& !(monsters[1]->position.x == newx && monsters[1]->position.y==newy-1 && monsters[1]->health>0)
+&& !(monsters[2]->position.x == newx && monsters[2]->position.y==newy-1 && monsters[2]->health>0)
+&& !(monsters[3]->position.x == newx && monsters[3]->position.y==newy-1 && monsters[3]->health>0)
+&& !(monsters[4]->position.x == newx && monsters[4]->position.y==newy-1 && monsters[4]->health>0)
+&& !(monsters[5]->position.x == newx && monsters[5]->position.y==newy-1 && monsters[5]->health>0)
+&& !(monsters[6]->position.x == newx && monsters[6]->position.y==newy-1 && monsters[6]->health>0)) {
                     visited[newy-1][newx] = 1;
                     newy--;
                     mvprintw(newy, newx, "%c", map [newy][newx]);
@@ -53,13 +53,13 @@ case KEY_UP: case '8':
             case KEY_DOWN: case '2':
                 while ( map [newy + 1][newx] != ' '&&map [newy + 1][newx] != '_'
                 &&map [newy + 1][newx] != '|'&& map [newy + 1][newx] != 'O'
-                && !(monsters[0]->position.x == newx && monsters[0]->position.y==newy+1)
-                && !(monsters[1]->position.x == newx && monsters[1]->position.y==newy+1)
-                && !(monsters[2]->position.x == newx && monsters[2]->position.y==newy+1)
-                && !(monsters[3]->position.x == newx && monsters[3]->position.y==newy+1)
-                && !(monsters[4]->position.x == newx && monsters[4]->position.y==newy+1)
-                && !(monsters[5]->position.x == newx && monsters[5]->position.y==newy+1)
-                && !(monsters[6]->position.x == newx && monsters[6]->position.y==newy+1)) {
+                && !(monsters[0]->position.x == newx && monsters[0]->position.y==newy+1&& monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx && monsters[1]->position.y==newy+1&& monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx && monsters[2]->position.y==newy+1&& monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx && monsters[3]->position.y==newy+1&& monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx && monsters[4]->position.y==newy+1&& monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx && monsters[5]->position.y==newy+1&& monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx && monsters[6]->position.y==newy+1&& monsters[6]->health>0)) {
                     visited [newy + 1][newx] = 1;
                     newy++;
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
@@ -68,13 +68,13 @@ case KEY_UP: case '8':
             case KEY_LEFT: case '4':
                 while ( map [newy][newx-1] != ' '&&map [newy ][newx-1] != '_'
                 &&map [newy ][newx-1] != '|'&&map [newy ][newx-1] != 'O'
-                && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy)
-                && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy)
-                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy)
-                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy)
-                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy)
-                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy)
-                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy)) {
+                && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy&& monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy&& monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy&& monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy&& monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy&& monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy&& monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy&& monsters[6]->health>0)) {
                     visited [newy][newx-1] = 1;
                     newx--;
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
@@ -83,13 +83,13 @@ case KEY_UP: case '8':
             case KEY_RIGHT: case '6':
                 while (map [newy][newx+1] != ' '&&map [newy ][newx+1] != '_'
                 &&map [newy ][newx+1] != '|'&&map [newy ][newx+1] != 'O'
-                && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy)
-                && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy)
-                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy)
-                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy)
-                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy)
-                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy)
-                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy)) {
+                && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy&& monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy&& monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy&& monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy&& monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy&& monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy&& monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy&& monsters[6]->health>0)) {
                     visited [newy][newx+1]=1;
                     newx++;
                     mvprintw(newy, newx, "%c", map [newy][newx]); 
@@ -98,13 +98,13 @@ case KEY_UP: case '8':
             case KEY_PPAGE: case '9':
                 while ( map [newy-1][newx+1] != ' '&&map [newy-1 ][newx+1] != '_'
                 &&map [newy-1 ][newx+1] != '|'&&map [newy-1][newx+1] != 'O'
-                && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy-1)
-                && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy-1)
-                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy-1)
-                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy-1)
-                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy-1)
-                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy-1)
-                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy-1)) {
+                && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy-1&& monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy-1&& monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy-1&& monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy-1&& monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy-1&& monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy-1&& monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy-1&& monsters[6]->health>0)) {
                     visited [newy-1][newx+1]=1;
                     newx++;
                     newy--;
@@ -114,13 +114,13 @@ case KEY_UP: case '8':
             case KEY_END: case '1':
                 while ( map [newy+1][newx-1] != ' '&&map [newy+1 ][newx-1] != '_'
                 &&map [newy+1 ][newx-1] != '|'&&map [newy+1][newx-1] != 'O'
-                && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy+1)
-                && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy+1)
-                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy+1)
-                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy+1)
-                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy+1)
-                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy+1)
-                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy+1)) {
+                && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy+1&& monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy+1&& monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy+1&& monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy+1&& monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy+1&& monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy+1&& monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy+1&& monsters[6]->health>0)) {
                     visited [newy+1][newx-1]=1;
                     newx--;
                     newy++;
@@ -130,13 +130,13 @@ case KEY_UP: case '8':
             case KEY_HOME: case '7':
                 while ( map [newy-1][newx-1] != ' '&&map [newy-1 ][newx-1] != '_'
                 &&map [newy-1 ][newx-1] != '|'&&map[newy-1][newx-1] != 'O'
-                && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy-1)
-                && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy-1)
-                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy-1)
-                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy-1)
-                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy-1)
-                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy-1)
-                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy-1)) {
+                && !(monsters[0]->position.x == newx-1 && monsters[0]->position.y==newy-1&&monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx-1 && monsters[1]->position.y==newy-1&&monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx-1 && monsters[2]->position.y==newy-1&&monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx-1 && monsters[3]->position.y==newy-1&&monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx-1 && monsters[4]->position.y==newy-1&&monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx-1 && monsters[5]->position.y==newy-1&&monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx-1 && monsters[6]->position.y==newy-1&&monsters[6]->health>0)) {
                     visited [newy-1][newx-1]=1;
                     newx--;
                     newy--;
@@ -146,13 +146,13 @@ case KEY_UP: case '8':
             case KEY_NPAGE: case '3':
                 while ( map [newy+1][newx+1] != ' '&&map [newy+1 ][newx+1] != '_'
                 &&map [newy+1][newx+1] != '|'&&map [newy+1][newx+1] != 'O'
-                && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy+1)
-                && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy+1)
-                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy+1)
-                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy+1)
-                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy+1)
-                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy+1)
-                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy+1)) {
+                && !(monsters[0]->position.x == newx+1 && monsters[0]->position.y==newy+1&&monsters[0]->health>0)
+                && !(monsters[1]->position.x == newx+1 && monsters[1]->position.y==newy+1&&monsters[1]->health>0)
+                && !(monsters[2]->position.x == newx+1 && monsters[2]->position.y==newy+1&&monsters[2]->health>0)
+                && !(monsters[3]->position.x == newx+1 && monsters[3]->position.y==newy+1&&monsters[3]->health>0)
+                && !(monsters[4]->position.x == newx+1 && monsters[4]->position.y==newy+1&&monsters[4]->health>0)
+                && !(monsters[5]->position.x == newx+1 && monsters[5]->position.y==newy+1&&monsters[5]->health>0)
+                && !(monsters[6]->position.x == newx+1 && monsters[6]->position.y==newy+1&&monsters[6]->health>0)) {
                     visited [newy+1][newx+1]=1;
                     newx++;
                     newy++;
@@ -343,7 +343,7 @@ else if(checkinroom(user, rooms[7]) == 1 ||checkinroom(user, rooms[8]) == 1 ){
 int playermove(int y, int x, player* user) {
     if((y == rooms[6]->door[3].y && x == rooms[6]->door[3].x) || (y == rooms[6]->door[0].y && x == rooms[6]->door[0].x))
     map[y][x] = '?';
-    if(checkinroom(user, rooms[6]) == 1)    user->health --;
+    if(checkinroom(user, rooms[6]) == 1){    user->health --;};
     /////////////////////////////////////////////////traps also alot for treasure room
     if((y == rooms[2]->position.y + 3 && x == rooms[2]->position.x + rooms[2]->width-4)
 ||(level == 4 && (y == rooms[4]->position.y + 1 && x == rooms[4]->position.x + rooms[4]->width-3))
@@ -704,6 +704,11 @@ void hit_enemy(player* user, monster** monsters){
     }
     ///////////////////////////////////other weapons that are long range
     else{
+        if(user->default_weapon->count==0){
+            update_message_box("no weapon left of this kind!", 0);
+            refresh();
+            return;
+        }
          user->default_weapon->count--;
         keypad(stdscr, TRUE);
         int dir;
@@ -712,6 +717,22 @@ void hit_enemy(player* user, monster** monsters){
             case KEY_UP:
                 for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
+                if(map[user->position.y-j][user->position.x]=='.'||map[user->position.y-j][user->position.x]=='+'||map[user->position.y-j][user->position.x]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y-j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y-j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y-j, user->position.x, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y-j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
                             
@@ -725,6 +746,23 @@ void hit_enemy(player* user, monster** monsters){
                     }
                 }
                 for(int j = user->default_weapon->range; j>0; j--){
+                    for(int j =1; j <= user->default_weapon->range; j++){
+                if(map[user->position.y-j][user->position.x]=='.'||map[user->position.y-j][user->position.x]=='+'||map[user->position.y-j][user->position.x]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y-j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y-j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y-j, user->position.x, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                     if(map [user->position.y-j][user->position.x] == '.'){
                         map [user->position.y-j][user->position.x] = user->default_weapon->name;
                         print_visited(user, rooms);
@@ -738,6 +776,22 @@ void hit_enemy(player* user, monster** monsters){
             case KEY_DOWN:
                 for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
+                if(map[user->position.y+j][user->position.x]=='.'||map[user->position.y+j][user->position.x]=='+'||map[user->position.y+j][user->position.x]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y+j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y+j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y+j, user->position.x, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                         if( monsters[i]->position.x == user->position.x && monsters[i]->position.y == user->position.y+j && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
                            
@@ -751,6 +805,22 @@ void hit_enemy(player* user, monster** monsters){
                     }
                 }
                 for(int j = user->default_weapon->range; j>0; j--){
+                if(map[user->position.y+j][user->position.x]=='.'||map[user->position.y+j][user->position.x]=='+'||map[user->position.y+j][user->position.x]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y+j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y+j, user->position.x, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y+j, user->position.x, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                     if(map [user->position.y+j][user->position.x] == '.'){
                         map [user->position.y+j][user->position.x] = user->default_weapon->name;
                         print_visited(user, rooms);
@@ -764,6 +834,22 @@ void hit_enemy(player* user, monster** monsters){
             case KEY_RIGHT:
                 for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
+                if(map[user->position.y][user->position.x+j]=='.'||map[user->position.y][user->position.x+j]=='+'||map[user->position.y][user->position.x+j]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y, user->position.x+j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y, user->position.x+j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y, user->position.x+j, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                         if( monsters[i]->position.x == user->position.x+j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
                             if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
@@ -776,6 +862,22 @@ void hit_enemy(player* user, monster** monsters){
                     }
                 }
                 for(int j = user->default_weapon->range; j>0; j--){
+                                    if(map[user->position.y][user->position.x+j]=='.'||map[user->position.y][user->position.x+j]=='+'||map[user->position.y][user->position.x+j]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y, user->position.x+j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y, user->position.x+j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y, user->position.x+j, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                     if(map [user->position.y][user->position.x+j] == '.'){
                         map [user->position.y][user->position.x+j] = user->default_weapon->name;
                         print_visited(user, rooms);
@@ -789,6 +891,22 @@ void hit_enemy(player* user, monster** monsters){
             case KEY_LEFT:
                 for(int i= 0; i<7; i++){
                     for(int j =1; j <= user->default_weapon->range; j++){
+                if(map[user->position.y][user->position.x-j]=='.'||map[user->position.y][user->position.x-j]=='+'||map[user->position.y][user->position.x-j]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y, user->position.x-j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y, user->position.x-j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y, user->position.x-j, symbol, -1);
+                    }
+                    refresh();
+                    napms(10);
+                }
                         if( monsters[i]->position.x == user->position.x-j && monsters[i]->position.y == user->position.y && monsters[i]->health>0){
                             monsters[i]->health -= user->default_weapon->damage;
                             if(monsters[i]->health > 0)     update_message_box("You hit the enemy!", 0);
@@ -801,6 +919,21 @@ void hit_enemy(player* user, monster** monsters){
                     }
                 }
                 for(int j = user->default_weapon->range; j>0; j--){
+                    if(map[user->position.y][user->position.x-j]=='.'||map[user->position.y][user->position.x-j]=='+'||map[user->position.y][user->position.x-j]=='#'){
+                    if(user->default_weapon->name=='N'){
+                 const wchar_t symbol[] = L"\U000027B3"; 
+                    mvaddnwstr(user->position.y, user->position.x-j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='W'){
+                  const wchar_t symbol[] = L"\U00002726"; 
+                    mvaddnwstr(user->position.y, user->position.x-j, symbol, -1);
+                    }
+                    if(user->default_weapon->name=='D'){
+                const wchar_t symbol[] = L"\U0001F5E1"; 
+                    mvaddnwstr(user->position.y, user->position.x-j, symbol, -1);
+                    }
+
+                }
                     if(map [user->position.y][user->position.x-j] == '.'){
                         map [user->position.y][user->position.x-j] = user->default_weapon->name;
                         print_visited(user, rooms);
@@ -813,9 +946,11 @@ void hit_enemy(player* user, monster** monsters){
                 break;
         }
     }
+    }
     refresh();
     beneath_box(user);
 }
+
 void monstermove(room **rooms, monster **monsters, player* user){
 
     for(int i = 0; i < 7; i++){

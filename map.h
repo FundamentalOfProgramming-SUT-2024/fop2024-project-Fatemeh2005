@@ -70,6 +70,7 @@ void update_message_box(const char* message, int i);
 void message_box();
 int show_menu();
 int sign_in(player* user);
+void generate_random_password(char *password, int length);
 int log_in(player* user);
 void beneath_box(player * user);
 void food_menu();
@@ -106,4 +107,5 @@ void loadplayerstruct(player* user, int*levelpointer);
 int pregame_menu2();
 int pregame2(player* user);
 void profile(player* user);
+void play_music(int play, const char *song);
 #endif

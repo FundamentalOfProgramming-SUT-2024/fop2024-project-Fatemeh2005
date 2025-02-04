@@ -145,8 +145,6 @@ int pregame_menu() {
     }
 }
 
-
-
 int color_choose_menu() {
     cbreak();
     noecho();
@@ -287,10 +285,11 @@ void sortUsers(User users[], int count) {
 
 void printScoreboard(const char *filename, player* user) {
     clear();
-     setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "");
     const wchar_t cup[] = L"\U0001F3C6"; 
     const wchar_t silver_medal[] = L"\U0001F948";
     const wchar_t bronze_medal[] = L"\U0001F949";
+
     FILE *file = fopen(filename, "r");
     if (!file) {
         printf("Error opening file!\n");
@@ -303,7 +302,7 @@ void printScoreboard(const char *filename, player* user) {
 
     // Read users from file
     while (fgets(line, sizeof(line), file)) {
-        if (count >= 100) break;  // Prevent overflow
+        if (count >= 100) break;
 
         if (sscanf(line, " %[^,], %d, %d, %d ", users[count].name, &users[count].score, &users[count].experience, &users[count].allmoney) == 4) {
             count++;
@@ -311,47 +310,65 @@ void printScoreboard(const char *filename, player* user) {
     }
     fclose(file);
 
-    // Sort users by score
     sortUsers(users, count);
 
-    // Print sorted scoreboard
-    printw("\nSorted Scoreboard:\n");
-    printw("    name  -  score -  experience - money gathered\n");
-    printw("----------------------\n");
-    for (int i = 0; i < count; i++) {
-        if(i == 0){
-            if(addingflash(user->username, users[i].name)==1){
-                printw("-->");
-            } 
-            addwstr(cup);
-            attron(COLOR_PAIR(1));
-            
-          printw(" GOAT:%s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);
-                        attroff(COLOR_PAIR(1));
-          }
-        else if(i == 1){ 
-            if(addingflash(user->username, users[i].name)==1){
-                printw("-->");
+    int row, col;
+    getmaxyx(stdscr, row, col);
+    int max_rows = row - 4;  // Leave space for header/footer
+    int start_index = 0;
+    int ch;
+
+    while (1) {
+        clear();
+
+        mvprintw(0, (col - 15) / 2, "Sorted Scoreboard");
+        mvprintw(1, 0, "      Rank | Username  | Score | Experience | Money");
+        mvprintw(2, 0, "----------------------------------------------------");
+
+        // Display users from start_index
+        for (int i = 0; i < max_rows && (start_index + i) < count; i++) {
+            int index = start_index + i;
+            int row_pos = i + 3; // Offset for headers
+
+            if (addingflash(user->username, users[index].name) == 1) {
+                mvprintw(row_pos, 0, "-->");
+            } else {
+                mvprintw(row_pos, 0, "   ");
             }
-             addwstr(silver_medal); 
-         attron(COLOR_PAIR(6));
-         printw(" Legend:%s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);
-         attroff(COLOR_PAIR(6));}
-        else if(i==2){
-            if(addingflash(user->username, users[i].name)==1){
-                printw("-->");
+
+            // Print medals
+            if (index == 0) {
+                mvaddwstr(row_pos, 4, cup);
+                attron(COLOR_PAIR(1));
+                mvprintw(row_pos, 7, "%d GOAT: %s - %d - %d - %d",index+1, users[index].name, users[index].score, users[index].experience, users[index].allmoney);
+                attroff(COLOR_PAIR(1));
+            } else if (index == 1) {
+                mvaddwstr(row_pos, 4, silver_medal);
+                attron(COLOR_PAIR(6));
+                mvprintw(row_pos, 7, "%d Legend: %s - %d - %d - %d",index+1, users[index].name, users[index].score, users[index].experience, users[index].allmoney);
+                attroff(COLOR_PAIR(6));
+            } else if (index == 2) {
+                mvaddwstr(row_pos, 4, bronze_medal);
+                attron(COLOR_PAIR(3));
+                mvprintw(row_pos, 7, "%d Chill Guy: %s - %d - %d - %d",index+1, users[index].name, users[index].score, users[index].experience, users[index].allmoney);
+                attroff(COLOR_PAIR(3));
+            } else {
+                mvprintw(row_pos, 4, " %d  %s - %d - %d - %d",index+1, users[index].name, users[index].score, users[index].experience, users[index].allmoney);
             }
-            addwstr(bronze_medal); 
-         attron(COLOR_PAIR(3));
-          printw("chill guy:%s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);
-          attroff(COLOR_PAIR(3));}
-        else{
-            if(addingflash(user->username, users[i].name)==1){
-                printw("-->");}
-                 printw("       %s - %d - %d - %d\n", users[i].name, users[i].score, users[i].experience, users[i].allmoney);}
+        }
+
+        mvprintw(row - 2, 0, "Use UP/DOWN arrows to scroll, 'q' to quit.");
+
+        refresh();
+
+ch = getch();
+if (ch == 'q') break;
+else if (ch == KEY_DOWN && start_index + 1 < count) start_index++;  // Allow scrolling with 2+ players
+else if (ch == KEY_UP && start_index > 0) start_index--;
+
     }
-    printw("----------------------\n");
 }
+
 int addingflash(char user[], char users[]) {
     return strcmp(user, users) == 0 ? 1 : 0;  // 1 if match, 0 otherwise
 }
@@ -529,7 +546,6 @@ int setting_menu(int music_on, int current_song_index) {
     }
 }
 
-// Function to display settings and allow user interaction
 int setting(player *user) {
     static int music_on = 0;           // Static variable to persist music state across settings
     static int current_song_index = 0; // Static variable to store the current song index
@@ -539,8 +555,8 @@ int setting(player *user) {
 
         if (selection == 0) {  // Difficulty level
             int level = level_choose_menu();
-            user->health = 30 - (level * 5);
-            user->Maxhealth = 30 - (level * 5);
+            user->health = 40 - (level * 5);
+            user->Maxhealth = 40 - (level * 5);
             mvprintw(0, 0, "Difficulty level selected: %d", level + 1);  // Display level (1-based index)
             refresh();
             getch();  // Wait for user to acknowledge
@@ -561,7 +577,6 @@ int setting(player *user) {
             refresh();
             getch();  // Wait for user to acknowledge
         } else if (selection == 3) {  // Change Song
-    // Show song list and let user choose a new song
     int new_song = -1;
 
     // Show song list in a new window
